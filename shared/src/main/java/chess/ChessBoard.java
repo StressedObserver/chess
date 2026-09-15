@@ -61,6 +61,7 @@ public class ChessBoard {
 
     //I've forgotten how useful these generated functions are.
     //Except, now they seem to be the cause of my issues even though I haven't modified them or anything.
+    //Had to implement more function overrides to get stuff to work.
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) {
@@ -76,6 +77,7 @@ public class ChessBoard {
     }
 
     //If I remember correctly, this is more so for debugging, but it is a very useful tool while debugging.
+    //Previous statement is incorrect, this is also for the tests.
     @Override
     public String toString() {
         return "ChessBoard{" +

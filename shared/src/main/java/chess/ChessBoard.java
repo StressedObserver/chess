@@ -60,6 +60,7 @@ public class ChessBoard {
     }
 
     //I've forgotten how useful these generated functions are.
+    //Except, now they seem to be the cause of my issues even though I haven't modified them or anything.
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) {

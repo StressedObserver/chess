@@ -57,27 +57,27 @@ public class ChessPiece {
             case PieceType.BISHOP: //Starting the sliding pieces
                 int[][] bishopOffsets = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
                 SlidingMovesCalculator bishopCalc = new SlidingMovesCalculator();
-                return bishopCalc.pieceMoves(board, myPosition, bishopOffsets);
+                return bishopCalc.possibleMoves(board, myPosition, bishopOffsets);
             case PieceType.ROOK:
                 int[][] rookOffsets = {{1,0}, {-1, 0}, {0, 1}, {0, -1}};
                 SlidingMovesCalculator rookCalc = new SlidingMovesCalculator();
-                return rookCalc.pieceMoves(board, myPosition, rookOffsets);
+                return rookCalc.possibleMoves(board, myPosition, rookOffsets);
             case PieceType.QUEEN:
                 int[][] queenOffsets = {{1,-1}, {1, 0}, {1, 1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {0, -1}}; //combining the rook and bishop offsets
                 SlidingMovesCalculator queenCalc = new SlidingMovesCalculator();
-                return queenCalc.pieceMoves(board, myPosition, queenOffsets);
+                return queenCalc.possibleMoves(board, myPosition, queenOffsets);
             case PieceType.KING: //Starting the hopping pieces
                 int[][] kingOffsets = {{1,-1}, {1, 0}, {1, 1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {0, -1}}; //Same as the queen's just gets used in different function.
                 HoppingMovesCalculator kingCalc = new HoppingMovesCalculator();
-                return kingCalc.pieceMoves(board, myPosition, kingOffsets);
+                return kingCalc.possibleMoves(board, myPosition, kingOffsets);
             case PieceType.KNIGHT:
                 int[][] knightOffsets = {{1, 2}, {1, -2}, {-1, 2}, {-1, -2}, {2, 1}, {2, -1}, {-2, 1}, {-2, -1}};
                 HoppingMovesCalculator knightCalc = new HoppingMovesCalculator();
-                return knightCalc.pieceMoves(board, myPosition, knightOffsets);
+                return knightCalc.possibleMoves(board, myPosition, knightOffsets);
             case PieceType.PAWN:
                 int[][] pawnOffsets = {{1, 1}, {1, -1}, {1, 0}}; //Only 3 offsets because the pawn can only go in 3 directions.
                 PawnMovesCalculator pawnCalc = new PawnMovesCalculator();
-                return pawnCalc.pieceMoves(board, myPosition, pawnOffsets);
+                return pawnCalc.possibleMoves(board, myPosition, pawnOffsets);
             default:
                 return List.of();
 

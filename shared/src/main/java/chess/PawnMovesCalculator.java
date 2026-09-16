@@ -6,7 +6,7 @@ import java.util.List;
 
 public class PawnMovesCalculator implements PieceMovesCalculator{ //For pawns specifically, since we need to add promotion logic
     @Override
-    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPos, int[][] offsets) {
+    public Collection<ChessMove> possibleMoves(ChessBoard board, ChessPosition myPos, int[][] offsets) {
         Collection<ChessMove> possibleMoves = new ArrayList<>();
         ChessPiece myPiece = board.getPiece(myPos);
         if(myPiece.getTeamColor() == ChessGame.TeamColor.BLACK){ //Need to flip where the pieces can go depending on team color

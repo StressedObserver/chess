@@ -6,7 +6,7 @@ import java.util.List;
 
 public class HoppingMovesCalculator implements PieceMovesCalculator{ //For Kings and Knights.
     @Override
-    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPos, int[][] offsets) {
+    public Collection<ChessMove> possibleMoves(ChessBoard board, ChessPosition myPos, int[][] offsets) {
         Collection<ChessMove> possibleMoves = new ArrayList<>();
         for(int offset[] : offsets){
             int offsetY = offset[0];

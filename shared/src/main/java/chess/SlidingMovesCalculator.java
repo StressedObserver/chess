@@ -7,7 +7,7 @@ import java.util.List;
 public class SlidingMovesCalculator implements PieceMovesCalculator{ //for Bishops, Rooks, and Queens specifically.
 
     @Override
-    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPos, int[][] offsets) {
+    public Collection<ChessMove> possibleMoves(ChessBoard board, ChessPosition myPos, int[][] offsets) {
         Collection<ChessMove> possibleMoves = new ArrayList<>();
         for(int offset[] : offsets){
             int offsetY = offset[0];

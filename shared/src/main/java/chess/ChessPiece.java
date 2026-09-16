@@ -54,7 +54,7 @@ public class ChessPiece {
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         ChessPiece myPiece = board.getPiece(myPosition);
         switch(myPiece.getPieceType()){
-            case PieceType.BISHOP:
+            case PieceType.BISHOP: //Starting the sliding pieces
                 int[][] bishopOffsets = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
                 SlidingMovesCalculator bishopCalc = new SlidingMovesCalculator();
                 return bishopCalc.pieceMoves(board, myPosition, bishopOffsets);
@@ -66,6 +66,14 @@ public class ChessPiece {
                 int[][] queenOffsets = {{1,-1}, {1, 0}, {1, 1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {0, -1}}; //combining the rook and bishop offsets
                 SlidingMovesCalculator queenCalc = new SlidingMovesCalculator();
                 return queenCalc.pieceMoves(board, myPosition, queenOffsets);
+            case PieceType.KING: //Starting the hopping pieces
+                int[][] kingOffsets = {{1,-1}, {1, 0}, {1, 1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {0, -1}}; //Same as the queen's just gets used in different function.
+                HoppingMovesCalculator kingCalc = new HoppingMovesCalculator();
+                return kingCalc.pieceMoves(board, myPosition, kingOffsets);
+            case PieceType.KNIGHT:
+                int[][] knightOffsets = {{1, 2}, {1, -2}, {-1, 2}, {-1, -2}, {2, 1}, {2, -1}, {-2, 1}, {-2, -1}};
+                HoppingMovesCalculator knightCalc = new HoppingMovesCalculator();
+                return knightCalc.pieceMoves(board, myPosition, knightOffsets);
             default:
                 return List.of();
 

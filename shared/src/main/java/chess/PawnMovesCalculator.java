@@ -35,7 +35,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator{ //For pawns sp
                         }
                         possibleMoves.add(new ChessMove(myPos, potentialPos, null));
                     }
-                } else if(board.getPiece(myPos) != null && offset[1] != 0 && board.getPiece(myPos).getTeamColor() != board.getPiece(potentialPos).getTeamColor()){ //The occupied piece belongs to a different team
+                } else if(board.getPiece(potentialPos) != null && offset[1] != 0 && board.getPiece(myPos).getTeamColor() != board.getPiece(potentialPos).getTeamColor()){ //The occupied piece belongs to a different team
                     if(promotionEligible(myPos.getRow(), myPiece)){ //promo conditions
                         possibleMoves.add(new ChessMove(myPos, potentialPos, ChessPiece.PieceType.BISHOP));
                         possibleMoves.add(new ChessMove(myPos, potentialPos, ChessPiece.PieceType.ROOK));

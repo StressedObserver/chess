@@ -74,6 +74,10 @@ public class ChessPiece {
                 int[][] knightOffsets = {{1, 2}, {1, -2}, {-1, 2}, {-1, -2}, {2, 1}, {2, -1}, {-2, 1}, {-2, -1}};
                 HoppingMovesCalculator knightCalc = new HoppingMovesCalculator();
                 return knightCalc.pieceMoves(board, myPosition, knightOffsets);
+            case PieceType.PAWN:
+                int[][] pawnOffsets = {{1, 1}, {1, -1}, {1, 0}}; //Only 3 offsets because the pawn can only go in 3 directions.
+                PawnMovesCalculator pawnCalc = new PawnMovesCalculator();
+                return pawnCalc.pieceMoves(board, myPosition, pawnOffsets);
             default:
                 return List.of();
 

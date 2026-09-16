@@ -14,6 +14,11 @@ public class PawnMovesCalculator implements PieceMovesCalculator{ //For pawns sp
                 offset[0] *= -1;
             }
         }
+        if((myPos.getRow() == 2 && myPiece.getTeamColor() == ChessGame.TeamColor.WHITE) || (myPos.getRow() == 7 && myPiece.getTeamColor() == ChessGame.TeamColor.BLACK)){
+            //The pawn hasn't moved yet, so we add an extra offset to check for double movement.
+            offsets[3] = new int[]{2, 0}; //Hopefully this adds things correctly.
+        }
+
         for(int offset[] : offsets){
             int offsetY = offset[0];
             int offsetX = offset[1];

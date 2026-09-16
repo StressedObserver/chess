@@ -26,6 +26,7 @@ public class SlidingMovesCalculator implements PieceMovesCalculator{
                 }
                 spottedY = spottedY + offsetY; //If we haven't broken yet our vision is still unobstructed
                 spottedX = spottedX + offsetX; //So we continue searching in this direction
+                potentialPos = new ChessPosition(spottedY, spottedX); //Update potentialPos so that the loop isn't infinite.
             }
         }
 

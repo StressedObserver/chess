@@ -23,20 +23,21 @@ public class PawnMovesCalculator implements PieceMovesCalculator{ //For pawns sp
             ChessPosition potentialPos = new ChessPosition(spottedY, spottedX);
             if(board.isInBounds(potentialPos)){
                 if(board.getPiece(potentialPos) == null  && offset[1] == 0){//The spot is blank
-                    if(promotionEligible(myPos.getRow(), myPiece)){ //promo conditions fulfilled.
+                    if(promotionEligible(potentialPos.getRow(), myPiece)){ //promo conditions fulfilled.
                         possibleMoves.add(new ChessMove(myPos, potentialPos, ChessPiece.PieceType.BISHOP));
                         possibleMoves.add(new ChessMove(myPos, potentialPos, ChessPiece.PieceType.ROOK));
                         possibleMoves.add(new ChessMove(myPos, potentialPos, ChessPiece.PieceType.QUEEN));
                         possibleMoves.add(new ChessMove(myPos, potentialPos, ChessPiece.PieceType.KNIGHT));
                     } else{ //promo conditions not fulfilled
-                        if(atInitialPosition(myPos.getRow(), myPiece) && board.getPiece(new ChessPosition(spottedY + 1, spottedX)) == null){
+                        ChessPosition lookAhead = new ChessPosition(spottedY + offsetY, spottedX);
+                        if(atInitialPosition(myPos.getRow(), myPiece) && board.getPiece(lookAhead) == null){
                             //it hasn't moved yet and the place 2 spaces ahead is also empty
-                            possibleMoves.add(new ChessMove(myPos, new ChessPosition(spottedY + 1, spottedX), null));
+                            possibleMoves.add(new ChessMove(myPos, lookAhead, null));
                         }
                         possibleMoves.add(new ChessMove(myPos, potentialPos, null));
                     }
                 } else if(board.getPiece(potentialPos) != null && offset[1] != 0 && board.getPiece(myPos).getTeamColor() != board.getPiece(potentialPos).getTeamColor()){ //The occupied piece belongs to a different team
-                    if(promotionEligible(myPos.getRow(), myPiece)){ //promo conditions
+                    if(promotionEligible(potentialPos.getRow(), myPiece)){ //promo conditions
                         possibleMoves.add(new ChessMove(myPos, potentialPos, ChessPiece.PieceType.BISHOP));
                         possibleMoves.add(new ChessMove(myPos, potentialPos, ChessPiece.PieceType.ROOK));
                         possibleMoves.add(new ChessMove(myPos, potentialPos, ChessPiece.PieceType.QUEEN));

@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -51,7 +52,24 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        throw new RuntimeException("Not implemented");
+        ChessPiece myPiece = board.getPiece(myPosition);
+        switch(myPiece.getPieceType()){
+            case PieceType.BISHOP:
+                int[][] bishopOffsets = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+                SlidingMovesCalculator bishopCalc = new SlidingMovesCalculator();
+                return bishopCalc.pieceMoves(board, myPosition, bishopOffsets);
+            case PieceType.ROOK:
+                int[][] rookOffsets = {{1,0}, {-1, 0}, {0, 1}, {0, -1}};
+                SlidingMovesCalculator rookCalc = new SlidingMovesCalculator();
+                return rookCalc.pieceMoves(board, myPosition, rookOffsets);
+            case PieceType.QUEEN:
+                int[][] queenOffsets = {{1,-1}, {1, 0}, {1, 1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {0, -1}}; //combining the rook and bishop offsets
+                SlidingMovesCalculator queenCalc = new SlidingMovesCalculator();
+                return queenCalc.pieceMoves(board, myPosition, queenOffsets);
+            default:
+                return List.of();
+
+        }
     }
 
     @Override

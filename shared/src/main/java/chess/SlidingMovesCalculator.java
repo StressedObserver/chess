@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class SlidingMovesCalculator implements PieceMovesCalculator{ //for Bishops, Rooks, and Queens specifically.
+public class SlidingMovesCalculator implements PieceMovesCalculator, PieceAttacksCalculator{ //for Bishops, Rooks, and Queens specifically.
 
     @Override
     public Collection<ChessMove> possibleMoves(ChessBoard board, ChessPosition myPos, int[][] offsets) {

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class HoppingMovesCalculator implements PieceMovesCalculator{ //For Kings and Knights.
+public class HoppingMovesCalculator implements PieceMovesCalculator, PieceAttacksCalculator{ //For Kings and Knights.
     @Override
     public Collection<ChessMove> possibleMoves(ChessBoard board, ChessPosition myPos, int[][] offsets) {
         Collection<ChessMove> possibleMoves = new ArrayList<>();

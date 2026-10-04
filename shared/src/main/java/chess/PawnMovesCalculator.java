@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class PawnMovesCalculator implements PieceMovesCalculator{ //For pawns specifically, since we need to add promotion logic
+public class PawnMovesCalculator implements PieceMovesCalculator, PieceAttacksCalculator{ //For pawns specifically, since we need to add promotion logic
     @Override
     public Collection<ChessMove> possibleMoves(ChessBoard board, ChessPosition myPos, int[][] offsets) {
         Collection<ChessMove> possibleMoves = new ArrayList<>();

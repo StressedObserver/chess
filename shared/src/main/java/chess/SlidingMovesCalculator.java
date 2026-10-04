@@ -32,4 +32,6 @@ public class SlidingMovesCalculator implements PieceMovesCalculator, PieceAttack
 
         return possibleMoves;
     }
+
+
 }

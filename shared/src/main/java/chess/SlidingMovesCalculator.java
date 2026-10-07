@@ -40,9 +40,9 @@ public class SlidingMovesCalculator implements PieceMovesCalculator, PieceAttack
         for(int[] offset: offsets){
             int potentialRow = myPos.getRow() + offset[0];
             int potentialColumn = myPos.getColumn() + offset[1];
-            ChessPosition potentialPos = new ChessPosition(potentialRow, potentialColumn);
-            while(myBoard.isInBounds(potentialPos)){
-               ChessPiece viewingPiece = myBoard.getPiece(potentialPos);
+            while(myBoard.isInBounds(new ChessPosition(potentialRow, potentialColumn))){
+                ChessPosition potentialPos = new ChessPosition(potentialRow, potentialColumn);
+                ChessPiece viewingPiece = myBoard.getPiece(potentialPos);
                if (viewingPiece == null){ //The square we are adding is empty.
                    attacks.add(new ChessMove(myPos, potentialPos, null));
                } else if(viewingPiece.getTeamColor() != attacker.getTeamColor()){

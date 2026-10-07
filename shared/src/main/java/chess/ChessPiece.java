@@ -50,27 +50,31 @@ public class ChessPiece {
      *
      * @return Collection of valid moves
      */
-    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
+    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition){
         ChessPiece myPiece = board.getPiece(myPosition);
         int[][] myOffsets = myPiece.pieceTypeOffsets();
-        return switch (myPiece.getPieceType()) {
-            case PieceType.BISHOP, PieceType.ROOK, PieceType.QUEEN -> {
-                SlidingMovesCalculator slidingCalc = new SlidingMovesCalculator();
-                yield slidingCalc.possibleMoves(board, myPosition, myOffsets);
-            }
-            case PieceType.KING, PieceType.KNIGHT -> {
-                HoppingMovesCalculator hoppingCalc = new HoppingMovesCalculator();
-                yield hoppingCalc.possibleMoves(board, myPosition, myOffsets);
-            }
-            case PieceType.PAWN -> {
-                PawnMovesCalculator pawnCalc = new PawnMovesCalculator();
-                yield pawnCalc.possibleMoves(board, myPosition, myOffsets);
-            }
+        PieceMovesCalculator pieceCalc = myPiece.pieceTypeMoves();
+        return pieceCalc.possibleMoves(board, myPosition, myOffsets);
+    }
+
+    public PieceAttacksCalculator pieceTypeAttacks(){
+        PieceType theType = this.getPieceType();
+        return switch (theType) {
+            case PieceType.BISHOP, PieceType.ROOK, PieceType.QUEEN -> new SlidingMovesCalculator();
+            case PieceType.KING, PieceType.KNIGHT -> new HoppingMovesCalculator();
+            case PieceType.PAWN -> new PawnMovesCalculator();
+        };
+    }
+    public PieceMovesCalculator pieceTypeMoves(){
+        PieceType theType = this.getPieceType();
+        return switch (theType) {
+            case PieceType.BISHOP, PieceType.ROOK, PieceType.QUEEN -> new SlidingMovesCalculator();
+            case PieceType.KING, PieceType.KNIGHT -> new HoppingMovesCalculator();
+            case PieceType.PAWN -> new PawnMovesCalculator();
         };
     }
 
-
-    private int[][] pieceTypeOffsets(){
+    public int[][] pieceTypeOffsets(){
         return switch (this.getPieceType()) {
             case PieceType.BISHOP -> //Starting the sliding pieces
                     new int[][]{{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};

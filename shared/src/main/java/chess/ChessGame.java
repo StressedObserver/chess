@@ -110,6 +110,7 @@ public class ChessGame {
                 case TeamColor.BLACK:
                     setTeamTurn(TeamColor.WHITE);
             }
+            return; //This is needed to prevent that exception from being thrown no matter what.
         }
         throw new InvalidMoveException("Not a valid move."); //Need to let things know that this move is invalid.
     }

@@ -107,8 +107,10 @@ public class ChessGame {
             switch (currTeam){
                 case TeamColor.WHITE:
                     setTeamTurn(TeamColor.BLACK);
+                    break; //To prevent double turn switching.
                 case TeamColor.BLACK:
                     setTeamTurn(TeamColor.WHITE);
+                    break; //To prevent double turn switching.
             }
             return; //This is needed to prevent that exception from being thrown no matter what.
         }

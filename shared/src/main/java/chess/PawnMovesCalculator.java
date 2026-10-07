@@ -54,10 +54,10 @@ public class PawnMovesCalculator implements PieceMovesCalculator, PieceAttacksCa
     }
 
     private void addPromoMoves(Collection<ChessMove> moves, ChessPosition to, ChessPosition from){
-        moves.add(new ChessMove(from, to, ChessPiece.PieceType.KNIGHT));
-        moves.add(new ChessMove(from, to, ChessPiece.PieceType.BISHOP));
-        moves.add(new ChessMove(from, to, ChessPiece.PieceType.ROOK));
-        moves.add(new ChessMove(from, to, ChessPiece.PieceType.QUEEN));
+        moves.add(new ChessMove(to, from, ChessPiece.PieceType.KNIGHT));
+        moves.add(new ChessMove(to, from, ChessPiece.PieceType.BISHOP));
+        moves.add(new ChessMove(to, from, ChessPiece.PieceType.ROOK));
+        moves.add(new ChessMove(to, from, ChessPiece.PieceType.QUEEN));
     }
 
     @Override

@@ -2,7 +2,6 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class PawnMovesCalculator implements PieceMovesCalculator, PieceAttacksCalculator{ //For pawns specifically, since we need to add promotion logic
     @Override
@@ -10,12 +9,12 @@ public class PawnMovesCalculator implements PieceMovesCalculator, PieceAttacksCa
         Collection<ChessMove> possibleMoves = new ArrayList<>();
         ChessPiece myPiece = board.getPiece(myPos);
         if(myPiece.getTeamColor() == ChessGame.TeamColor.BLACK){ //Need to flip where the pieces can go depending on team color
-            for(int offset[]: offsets){
+            for(int[] offset : offsets){
                 offset[0] *= -1;
             }
         }
 
-        for(int offset[] : offsets){
+        for(int[] offset : offsets){
             int offsetY = offset[0];
             int offsetX = offset[1];
             int spottedY = myPos.getRow() + offsetY;
@@ -66,7 +65,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator, PieceAttacksCa
         Collection<ChessMove> attacks = new ArrayList<>();
         ChessPiece attacker = myBoard.getPiece(myPos);
         if(attacker.getTeamColor() == ChessGame.TeamColor.BLACK){ //Need to flip where the pieces can go depending on team color
-            for(int offset[]: offsets){
+            for(int[] offset : offsets){
                 offset[0] *= -1;
             }
         }

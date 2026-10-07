@@ -53,34 +53,43 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         ChessPiece myPiece = board.getPiece(myPosition);
+        int[][] myOffsets = myPiece.pieceTypeOffsets();
         switch(myPiece.getPieceType()){
-            case PieceType.BISHOP: //Starting the sliding pieces
-                int[][] bishopOffsets = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
-                SlidingMovesCalculator bishopCalc = new SlidingMovesCalculator();
-                return bishopCalc.possibleMoves(board, myPosition, bishopOffsets);
-            case PieceType.ROOK:
-                int[][] rookOffsets = {{1,0}, {-1, 0}, {0, 1}, {0, -1}};
-                SlidingMovesCalculator rookCalc = new SlidingMovesCalculator();
-                return rookCalc.possibleMoves(board, myPosition, rookOffsets);
-            case PieceType.QUEEN:
-                int[][] queenOffsets = {{1,-1}, {1, 0}, {1, 1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {0, -1}}; //combining the rook and bishop offsets
-                SlidingMovesCalculator queenCalc = new SlidingMovesCalculator();
-                return queenCalc.possibleMoves(board, myPosition, queenOffsets);
-            case PieceType.KING: //Starting the hopping pieces
-                int[][] kingOffsets = {{1,-1}, {1, 0}, {1, 1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {0, -1}}; //Same as the queen's just gets used in different function.
-                HoppingMovesCalculator kingCalc = new HoppingMovesCalculator();
-                return kingCalc.possibleMoves(board, myPosition, kingOffsets);
-            case PieceType.KNIGHT:
-                int[][] knightOffsets = {{1, 2}, {1, -2}, {-1, 2}, {-1, -2}, {2, 1}, {2, -1}, {-2, 1}, {-2, -1}};
-                HoppingMovesCalculator knightCalc = new HoppingMovesCalculator();
-                return knightCalc.possibleMoves(board, myPosition, knightOffsets);
+            case PieceType.BISHOP, PieceType.ROOK, PieceType.QUEEN:
+                SlidingMovesCalculator slidingCalc = new SlidingMovesCalculator();
+                return slidingCalc.possibleMoves(board, myPosition, myOffsets);
+            case PieceType.KING, PieceType.KNIGHT:
+                HoppingMovesCalculator hoppingCalc = new HoppingMovesCalculator();
+                return hoppingCalc.possibleMoves(board, myPosition, myOffsets);
             case PieceType.PAWN:
-                int[][] pawnOffsets = {{1, 1}, {1, -1}, {1, 0}}; //Only 3 offsets because the pawn can only go in 3 directions.
                 PawnMovesCalculator pawnCalc = new PawnMovesCalculator();
-                return pawnCalc.possibleMoves(board, myPosition, pawnOffsets);
+                return pawnCalc.possibleMoves(board, myPosition, myOffsets);
             default:
                 return List.of();
+        }
+    }
 
+
+    private int[][] pieceTypeOffsets(){
+        switch(this.getPieceType()) {
+            case PieceType.BISHOP: //Starting the sliding pieces
+                int[][] bishopOffsets = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+                return bishopOffsets;
+            case PieceType.ROOK:
+                int[][] rookOffsets = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+                return rookOffsets;
+            case PieceType.QUEEN,
+                 PieceType.KING: //merging these two since they have the same offsets, just used differently.
+                int[][] kingQueenOffsets = {{1, -1}, {1, 0}, {1, 1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {0, -1}}; //combining the rook and bishop offsets
+                return kingQueenOffsets;
+            case PieceType.KNIGHT:
+                int[][] knightOffsets = {{1, 2}, {1, -2}, {-1, 2}, {-1, -2}, {2, 1}, {2, -1}, {-2, 1}, {-2, -1}};
+                return knightOffsets;
+            case PieceType.PAWN:
+                int[][] pawnOffsets = {{1, 1}, {1, -1}, {1, 0}}; //Only 3 offsets because the pawn can only go in 3 directions.
+                return pawnOffsets;
+            default:
+                return null;
         }
     }
 

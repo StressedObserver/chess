@@ -92,6 +92,35 @@ public class ChessGame {
     }
 
     private boolean pieceAttacksSquare(ChessBoard board, ChessPosition startPos, ChessPosition targetPos){
+        ChessPiece myPiece = board.getPiece(startPos);
+        switch(myPiece.getPieceType()) {
+            case ChessPiece.PieceType.BISHOP: //Starting the sliding pieces
+                int[][] bishopOffsets = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+                SlidingMovesCalculator bishopCalc = new SlidingMovesCalculator();
+                return bishopCalc.possibleMoves(board, myPos, bishopOffsets);
+            case ChessPiece.PieceType.ROOK:
+                int[][] rookOffsets = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+                SlidingMovesCalculator rookCalc = new SlidingMovesCalculator();
+                return rookCalc.possibleMoves(board, myPos, rookOffsets);
+            case ChessPiece.PieceType.QUEEN:
+                int[][] queenOffsets = {{1, -1}, {1, 0}, {1, 1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {0, -1}}; //combining the rook and bishop offsets
+                SlidingMovesCalculator queenCalc = new SlidingMovesCalculator();
+                return queenCalc.possibleMoves(board, myPos, queenOffsets);
+            case ChessPiece.PieceType.KING: //Starting the hopping pieces
+                int[][] kingOffsets = {{1, -1}, {1, 0}, {1, 1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {0, -1}}; //Same as the queen's just gets used in different function.
+                HoppingMovesCalculator kingCalc = new HoppingMovesCalculator();
+                return kingCalc.possibleMoves(board, myPos, kingOffsets);
+            case ChessPiece.PieceType.KNIGHT:
+                int[][] knightOffsets = {{1, 2}, {1, -2}, {-1, 2}, {-1, -2}, {2, 1}, {2, -1}, {-2, 1}, {-2, -1}};
+                HoppingMovesCalculator knightCalc = new HoppingMovesCalculator();
+                return knightCalc.possibleMoves(board, myPos, knightOffsets);
+            case ChessPiece.PieceType.PAWN:
+                int[][] pawnOffsets = {{1, 1}, {1, -1}, {1, 0}}; //Only 3 offsets because the pawn can only go in 3 directions.
+                PawnMovesCalculator pawnCalc = new PawnMovesCalculator();
+                return pawnCalc.possibleMoves(board, myPos, pawnOffsets);
+            default:
+                return List.of();
+        }
         return true; //Finish implementing this once the attack functions are up.
     }
 

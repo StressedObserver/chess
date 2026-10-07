@@ -77,10 +77,10 @@ public class ChessGame {
     private boolean isInCheckHelper(ChessBoard board, TeamColor teamTurn){
         ChessPosition teamKingLoc = teamKingLocatorOnBoard(board, teamTurn);
         for(int i =1; i<=8; i++){
-            for(int j = 1; j>=8; j++){ //Iterating through all of the chessboard.
+            for(int j = 1; j<=8; j++){ //Iterating through all the chessboard.
                 ChessPosition myPosition = new ChessPosition(i, j);
                 ChessPiece myPiece = board.getPiece(myPosition);
-                if(myPiece != null && teamTurn != piece.getTeamColor()){ //If there is a piece there
+                if(myPiece != null && teamTurn != myPiece.getTeamColor()){ //If there is a piece there,
                     //and it is not part of the team currently moving.
                     if(pieceAttacksSquare(board, myPosition, teamKingLoc)){
                         return true;
@@ -88,10 +88,11 @@ public class ChessGame {
                 }
             }
         }
+        return false;
     }
 
     private boolean pieceAttacksSquare(ChessBoard board, ChessPosition startPos, ChessPosition targetPos){
-        return null; //Finish implementing this once the attack functions are up.
+        return true; //Finish implementing this once the attack functions are up.
     }
 
     private ChessPosition teamKingLocatorOnBoard(ChessBoard board, TeamColor team){

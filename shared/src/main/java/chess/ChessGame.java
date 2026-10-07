@@ -190,7 +190,7 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        return (noValidMoves(teamColor) && isInCheck(teamColor));
+        return (isInCheck(teamColor) && noValidMoves(teamColor));
     }
 
     /**

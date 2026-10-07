@@ -34,4 +34,28 @@ public class SlidingMovesCalculator implements PieceMovesCalculator, PieceAttack
     }
 
 
+    @Override
+    public Collection<ChessMove> attackVision(ChessBoard myBoard, ChessPosition myPos, int[][] offsets) {
+        Collection<ChessMove> attacks = new ArrayList<>();
+        ChessPiece attacker = myBoard.getPiece(myPos);
+        for(int[] offset: offsets){
+            int potentialRow = myPos.getRow() + offset[0];
+            int potentialColumn = myPos.getColumn() + offset[1];
+            ChessPosition potentialPos = new ChessPosition(potentialRow, potentialColumn);
+            while(myBoard.isInBounds(potentialPos)){
+               ChessPiece viewingPiece = myBoard.getPiece(potentialPos);
+               if (viewingPiece == null){ //The square we are adding is empty.
+                   attacks.add(new ChessMove(myPos, potentialPos, null));
+               } else if(viewingPiece.getTeamColor() != attacker.getTeamColor()){
+                       attacks.add(new ChessMove(myPos, potentialPos, null));
+                       break;
+               } else{ //If the viewing piece does exist but is part of the same team as the attacking team.
+                   break; //A bit redundant, but I want to avoid nested if statements.
+               }
+               potentialRow += offset[0];
+               potentialColumn += offset[1];
+            }
+        }
+        return attacks;
+    }
 }

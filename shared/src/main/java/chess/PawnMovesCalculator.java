@@ -59,4 +59,9 @@ public class PawnMovesCalculator implements PieceMovesCalculator, PieceAttacksCa
     private boolean atInitialPosition(int row, ChessPiece myPiece){
         return (row == 2 && myPiece.getTeamColor() == ChessGame.TeamColor.WHITE) || (row == 7 && myPiece.getTeamColor() == ChessGame.TeamColor.BLACK);
     }
+
+    @Override
+    public Collection<ChessMove> attackVision(ChessBoard myBoard, ChessPosition myPos, int[][] offsets) {
+        return List.of();
+    }
 }

@@ -25,4 +25,9 @@ public class HoppingMovesCalculator implements PieceMovesCalculator, PieceAttack
 
         return possibleMoves;
     }
+
+    @Override
+    public Collection<ChessMove> attackVision(ChessBoard myBoard, ChessPosition myPos, int[][] offsets) {
+        return List.of();
+    }
 }

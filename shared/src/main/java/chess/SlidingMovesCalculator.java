@@ -2,14 +2,13 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class SlidingMovesCalculator implements PieceMovesCalculator, PieceAttacksCalculator{ //for Bishops, Rooks, and Queens specifically.
 
     @Override
     public Collection<ChessMove> possibleMoves(ChessBoard board, ChessPosition myPos, int[][] offsets) {
         Collection<ChessMove> possibleMoves = new ArrayList<>();
-        for(int offset[] : offsets){
+        for(int[] offset : offsets){
             int offsetY = offset[0];
             int offsetX = offset[1];
             int spottedY = myPos.getRow() + offsetY;
@@ -47,8 +46,8 @@ public class SlidingMovesCalculator implements PieceMovesCalculator, PieceAttack
                if (viewingPiece == null){ //The square we are adding is empty.
                    attacks.add(new ChessMove(myPos, potentialPos, null));
                } else if(viewingPiece.getTeamColor() != attacker.getTeamColor()){
-                       attacks.add(new ChessMove(myPos, potentialPos, null));
-                       break;
+                   attacks.add(new ChessMove(myPos, potentialPos, null));
+                   break;
                } else{ //If the viewing piece does exist but is part of the same team as the attacking team.
                    break; //A bit redundant, but I want to avoid nested if statements.
                }

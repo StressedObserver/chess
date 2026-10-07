@@ -86,6 +86,7 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
+        //Time for a big one.
         throw new RuntimeException("Not implemented");
     }
 
@@ -192,6 +193,7 @@ public class ChessGame {
                 }
             }
         }
+        return copy;
     }
 
     /**

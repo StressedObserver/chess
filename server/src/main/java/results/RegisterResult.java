@@ -1,6 +1,6 @@
 package results;
 
 public record RegisterResult(String username, String authToken) {
-    public String getAuthToken(){
-    }
+//    public String getAuthToken(){
+//    }
 }

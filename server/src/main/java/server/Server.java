@@ -2,7 +2,9 @@ package server;
 
 import dataaccess.DataAccess;
 import dataaccess.MemoryDataAccess;
+import handler.UserHandler;
 import io.javalin.*;
+import service.ClearService;
 import service.GameService;
 import service.UserService;
 
@@ -24,6 +26,9 @@ public class Server {
 
             UserService userService = new UserService(dataAccess);
             GameService gameService = new GameService(dataAccess);
+            ClearService clearService = new ClearService(dataAccess);
+
+            UserHandler userHandler = new UserHandler(userService);
         } catch (Exception e){
             System.out.printf("Unable to start server: %s%n", e.getMessage());
             return -1;

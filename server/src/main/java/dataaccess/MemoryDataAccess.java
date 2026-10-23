@@ -12,51 +12,57 @@ public class MemoryDataAccess implements DataAccess{
 
     @Override
     public void clear() throws DataAccessException {
-
+        users.clear();
+        games.clear();
+        auths.clear();
     }
 
     @Override
     public void createUser(UserData user) throws DataAccessException {
-
+        if(users.containsKey(user.username())){
+            throw new DataAccessException("User already exists");
+        }
+        users.put(user.username(), user);
     }
 
     @Override
     public UserData getUser(String username) throws DataAccessException {
-        return null;
+        return users.get(username);
     }
 
     @Override
     public int createGame(GameData game) throws DataAccessException {
+        games.put(game.gameID(), game);
         return 0;
     }
 
     @Override
     public GameData getGame(int gameID) throws DataAccessException {
-        return null;
+        return games.get(gameID);
     }
 
     @Override
     public Collection<GameData> listGames() throws DataAccessException {
-        return List.of();
+        return games.values();
     }
 
     @Override
     public void updateGame(GameData game) throws DataAccessException {
-
+        games.put(game.gameID(), game);
     }
 
     @Override
     public void createAuth(AuthData auth) throws DataAccessException {
-
+        auths.put(auth.authToken(), auth);
     }
 
     @Override
     public AuthData getAuth(String token) throws DataAccessException {
-        return null;
+        return auths.get(token);
     }
 
     @Override
     public void deleteAuth(String token) throws DataAccessException {
-
+        auths.remove(token);
     }
 }

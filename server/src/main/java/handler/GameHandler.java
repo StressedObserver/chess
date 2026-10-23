@@ -41,7 +41,7 @@ public class GameHandler {
             if(message.equals("Error: unauthorized")){
                 context.status(401).json(new ErrorResult(message));
             } else{
-                context.status(500).json(new ErrorResult("Error: " + e.getMessage()));
+                context.status(400).json(new ErrorResult(e.getMessage()));
             }
         } catch(IllegalStateException e){
             context.status(401).json(new ErrorResult(e.getMessage()));

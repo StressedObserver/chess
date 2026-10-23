@@ -1,14 +1,13 @@
 package dataaccess;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import model.*;
+
 public class MemoryDataAccess implements DataAccess{
 
-    private final HashMap<String, UserData> users = new HashMap<>();
-    private final HashMap<Integer, GameData> games = new HashMap<>();
-    private final HashMap<String, AuthData> auths = new HashMap<>();
+    private final Map<String, UserData> users = new HashMap<>();
+    private final Map<Integer, GameData> games = new HashMap<>();
+    private final Map<String, AuthData> auths = new HashMap<>();
 
     @Override
     public void clear() throws DataAccessException {

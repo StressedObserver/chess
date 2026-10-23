@@ -37,6 +37,10 @@ public class GameService {
         if(request.authToken() == null || request.authToken().isBlank()){
             throw new IllegalArgumentException("Error: unauthorized");
         }
+        AuthData authData = dao.getAuth(request.authToken());
+        if(authData == null){
+            throw new IllegalArgumentException("Error: unauthorized");
+        }
 
         if(request.gameName() == null || request.gameName().isBlank()){
             throw new IllegalArgumentException("Error: bad request");

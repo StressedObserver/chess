@@ -45,8 +45,9 @@ public class UserService {
             throw new IllegalArgumentException("Error: bad request");
         }
         UserData userData = dao.getUser(request.username());
-        if(userData == null){
-            throw new UnauthorizedException("Error: unauthorized");
+        if(userData == null || !(request.password().equals(userData.password()))){
+            throw new IllegalStateException("Error: unauthorized");
+            //throw new UnauthorizedException("Error: unauthorized");
         }
 
         String token = UUID.randomUUID().toString();
@@ -63,7 +64,8 @@ public class UserService {
 
         var authData = dao.getAuth(request.authToken());
         if(authData == null){
-            throw new UnauthorizedException("Error: unauthorized");
+            throw new IllegalStateException("Error: unauthorized");
+            //throw new UnauthorizedException("Error: unauthorized");
         }
 
         dao.deleteAuth(request.authToken());

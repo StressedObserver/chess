@@ -1,6 +1,10 @@
 package server;
 
+import dataaccess.DataAccess;
+import dataaccess.MemoryDataAccess;
 import io.javalin.*;
+import service.GameService;
+import service.UserService;
 
 public class Server {
 
@@ -14,6 +18,17 @@ public class Server {
     }
 
     public int run(int desiredPort) {
+
+        try{
+            final DataAccess dataAccess = new MemoryDataAccess();
+
+            UserService userService = new UserService(dataAccess);
+            GameService gameService = new GameService(dataAccess);
+        } catch (Exception e){
+            System.out.printf("Unable to start server: %s%n", e.getMessage());
+            return -1;
+        }
+
         javalin.start(desiredPort);
         return javalin.port();
     }

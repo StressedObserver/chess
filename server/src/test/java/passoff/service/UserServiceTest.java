@@ -69,7 +69,7 @@ public class UserServiceTest {
 
         service.register(new RegisterRequest("liz", "pw", "email"));
 
-        var ex = Assertions.assertThrows(IllegalStateException.class, () ->
+        var ex = Assertions.assertThrows(UnauthorizedException.class, () ->
                 service.login(new LoginRequest("liz", "wrong"))
         );
 
@@ -110,7 +110,7 @@ public class UserServiceTest {
         DataAccess dao = new MemoryDataAccess();
         UserService service = new UserService(dao);
 
-        var ex = Assertions.assertThrows(IllegalStateException.class, () ->
+        var ex = Assertions.assertThrows(UnauthorizedException.class, () ->
                 service.logout(new LogoutRequest("bad-token"))
         );
 
@@ -126,7 +126,7 @@ public class UserServiceTest {
         var reg = service.register(new RegisterRequest("liz", "pw", "email"));
         service.logout(new LogoutRequest(reg.authToken()));
 
-        var ex = Assertions.assertThrows(IllegalStateException.class, () ->
+        var ex = Assertions.assertThrows(UnauthorizedException.class, () ->
                 service.logout(new LogoutRequest(reg.authToken()))
         );
 

@@ -21,7 +21,7 @@ public class GameServiceTest {
 
         CreateGameRequest request = new CreateGameRequest(reg.authToken(), "MyGame");
         CreateGameResult result = service.createGame(request);
-
+        //I need some way of checking what result.gameID() currently is to debug this.
         Assertions.assertTrue(result.gameID() > 0);
     }
 

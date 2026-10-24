@@ -30,9 +30,8 @@ public class MemoryDataAccess implements DataAccess{
     }
 
     @Override
-    public int createGame(GameData game) throws DataAccessException {
+    public void createGame(GameData game) throws DataAccessException {
         games.put(game.gameID(), game);
-        return 0;
     }
 
     @Override

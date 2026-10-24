@@ -106,7 +106,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void logoutNegativeBadToken() throws Exception {
+    public void logoutNegativeBadToken() {
         DataAccess dao = new MemoryDataAccess();
         UserService service = new UserService(dao);
 

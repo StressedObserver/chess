@@ -8,7 +8,7 @@ public class HoppingMovesCalculator implements MovesCalculator {
     @Override
     public Collection<ChessMove> possibleMoves(ChessBoard board, ChessPosition myPos, int[][] offsets) {
         Collection<ChessMove> possibleMoves = new ArrayList<>();
-        for(int offset[] : offsets){
+        for(int[] offset : offsets){
             int offsetY = offset[0];
             int offsetX = offset[1];
             int spottedY = myPos.getRow() + offsetY;

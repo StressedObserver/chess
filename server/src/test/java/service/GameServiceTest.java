@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import requests.*;
 import results.*;
-import service.*;
 
 public class GameServiceTest {
     //The tests for creating games:

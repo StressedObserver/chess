@@ -53,19 +53,11 @@ public class ChessPiece {
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition){
         ChessPiece myPiece = board.getPiece(myPosition);
         int[][] myOffsets = myPiece.pieceTypeOffsets();
-        PieceMovesCalculator pieceCalc = myPiece.pieceTypeMoves();
+        MovesCalculator pieceCalc = myPiece.pieceTypeCalc();
         return pieceCalc.possibleMoves(board, myPosition, myOffsets);
     }
 
-    public PieceAttacksCalculator pieceTypeAttacks(){
-        PieceType theType = this.getPieceType();
-        return switch (theType) {
-            case PieceType.BISHOP, PieceType.ROOK, PieceType.QUEEN -> new SlidingMovesCalculator();
-            case PieceType.KING, PieceType.KNIGHT -> new HoppingMovesCalculator();
-            case PieceType.PAWN -> new PawnMovesCalculator();
-        };
-    }
-    public PieceMovesCalculator pieceTypeMoves(){
+    public MovesCalculator pieceTypeCalc(){
         PieceType theType = this.getPieceType();
         return switch (theType) {
             case PieceType.BISHOP, PieceType.ROOK, PieceType.QUEEN -> new SlidingMovesCalculator();

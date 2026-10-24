@@ -146,7 +146,7 @@ public class ChessGame {
     private boolean pieceAttacksSquare(ChessBoard board, ChessPosition startPos, ChessPosition targetPos){
         ChessPiece myPiece = board.getPiece(startPos);
         int[][] offsets = myPiece.pieceTypeOffsets();
-        PieceAttacksCalculator pieceCalc = myPiece.pieceTypeAttacks();
+        MovesCalculator pieceCalc = myPiece.pieceTypeCalc();
         for(ChessMove move: pieceCalc.attackVision(board, startPos, offsets)){
             if(move.getEndPosition().equals(targetPos)){
                 return true;

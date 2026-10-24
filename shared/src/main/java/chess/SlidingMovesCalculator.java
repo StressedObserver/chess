@@ -3,7 +3,8 @@ package chess;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class SlidingMovesCalculator implements PieceMovesCalculator, PieceAttacksCalculator{ //for Bishops, Rooks, and Queens specifically.
+public class SlidingMovesCalculator implements MovesCalculator {
+    //for Bishops, Rooks, and Queens specifically.
 
     @Override
     public Collection<ChessMove> possibleMoves(ChessBoard board, ChessPosition myPos, int[][] offsets) {
@@ -17,7 +18,8 @@ public class SlidingMovesCalculator implements PieceMovesCalculator, PieceAttack
             while(board.isInBounds(potentialPos)){
                 if(board.getPiece(potentialPos) == null){ //The spot is blank
                     possibleMoves.add(new ChessMove(myPos, potentialPos, null));
-                } else if(board.getPiece(myPos).getTeamColor() != board.getPiece(potentialPos).getTeamColor()){ //The occupied piece belongs to a different team
+                } else if(board.getPiece(myPos).getTeamColor() != board.getPiece(potentialPos).getTeamColor()){
+                    //The occupied piece belongs to a different team
                     possibleMoves.add(new ChessMove(myPos, potentialPos, null));
                     break; //This piece is blocking the vision, so we don't continue along this line.
                 } else{ //We are blocked by our own pieces.

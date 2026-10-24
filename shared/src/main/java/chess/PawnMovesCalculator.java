@@ -3,7 +3,8 @@ package chess;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class PawnMovesCalculator implements PieceMovesCalculator, PieceAttacksCalculator{ //For pawns specifically, since we need to add promotion logic
+public class PawnMovesCalculator implements MovesCalculator {
+    //For pawns specifically
     @Override
     public Collection<ChessMove> possibleMoves(ChessBoard board, ChessPosition myPos, int[][] offsets) {
         Collection<ChessMove> possibleMoves = new ArrayList<>();
@@ -20,26 +21,31 @@ public class PawnMovesCalculator implements PieceMovesCalculator, PieceAttacksCa
             int spottedY = myPos.getRow() + offsetY;
             int spottedX = myPos.getColumn() + offsetX;
             ChessPosition potentialPos = new ChessPosition(spottedY, spottedX);
-            if(board.isInBounds(potentialPos)){
-                if(board.getPiece(potentialPos) == null  && offset[1] == 0){//The spot is blank
-                    if(promotionEligible(potentialPos.getRow(), myPiece)){ //promo conditions fulfilled.
-                        addPromoMoves(possibleMoves, myPos, potentialPos);
-                    } else{ //promo conditions not fulfilled
-                        ChessPosition lookAhead = new ChessPosition(spottedY + offsetY, spottedX);
-                        if(atInitialPosition(myPos.getRow(), myPiece) && board.getPiece(lookAhead) == null){
-                            //it hasn't moved yet and the place 2 spaces ahead is also empty
-                            possibleMoves.add(new ChessMove(myPos, lookAhead, null));
-                        }
-                        possibleMoves.add(new ChessMove(myPos, potentialPos, null));
+            if(board.isInBounds(potentialPos)
+                    && board.getPiece(potentialPos) == null
+                    && offset[1] == 0){
+                //The spot is blank and in bounds
+                if(promotionEligible(potentialPos.getRow(), myPiece)){ //promo conditions fulfilled.
+                    addPromoMoves(possibleMoves, myPos, potentialPos);
+                } else{ //promo conditions not fulfilled
+                    ChessPosition lookAhead = new ChessPosition(spottedY + offsetY, spottedX);
+                    if(atInitialPosition(myPos.getRow(), myPiece) && board.getPiece(lookAhead) == null){
+                        //it hasn't moved yet and the place 2 spaces ahead is also empty
+                        possibleMoves.add(new ChessMove(myPos, lookAhead, null));
                     }
-                } else if(board.getPiece(potentialPos) != null && offset[1] != 0 && board.getPiece(myPos).getTeamColor() != board.getPiece(potentialPos).getTeamColor()){ //The occupied piece belongs to a different team
-                    if(promotionEligible(potentialPos.getRow(), myPiece)){ //promo conditions
-                        addPromoMoves(possibleMoves, myPos, potentialPos);
-                    } else{ //promo conditions not fulfilled.
-                        possibleMoves.add(new ChessMove(myPos, potentialPos, null));
-                    }
-                } //We are blocked by our own pieces otherwise, but since this is not a loop we don't need an extra condition to break out.
-            }
+                    possibleMoves.add(new ChessMove(myPos, potentialPos, null));
+                }
+            } else if(board.isInBounds(potentialPos)
+                    && board.getPiece(potentialPos) != null
+                    && offset[1] != 0
+                    && board.getPiece(myPos).getTeamColor() != board.getPiece(potentialPos).getTeamColor()){
+                //The occupied piece belongs to a different team
+                if(promotionEligible(potentialPos.getRow(), myPiece)){ //promo conditions
+                    addPromoMoves(possibleMoves, myPos, potentialPos);
+                } else{ //promo conditions not fulfilled.
+                    possibleMoves.add(new ChessMove(myPos, potentialPos, null));
+                }
+            } //We are blocked by our own pieces otherwise, but since this is not a loop we don't need an extra condition to break out.
         }
 
         return possibleMoves;

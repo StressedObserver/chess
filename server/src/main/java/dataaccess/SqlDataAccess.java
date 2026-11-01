@@ -13,6 +13,7 @@ import model.AuthData;
 import model.GameData;
 import model.UserData;
 import chess.ChessGame;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class SqlDataAccess implements DataAccess {
 
@@ -26,7 +27,7 @@ public class SqlDataAccess implements DataAccess {
     public void clear() throws DataAccessException {
         String[] statements = {
                 "TRUNCATE TABLE user",
-                "TRUNCATE TABLE atuh",
+                "TRUNCATE TABLE auth",
                 "TRUNCATE TABLE game",
         };
         try(var connection = DatabaseManager.getConnection()){
@@ -43,17 +44,45 @@ public class SqlDataAccess implements DataAccess {
 
     @Override
     public void createUser(UserData user) throws DataAccessException {
+        String sql = "INSERT INTO user (username, password, email) VALUES (?, ?, ?)";
+        String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
 
+        try(var connection = DatabaseManager.getConnection()){
+            try(var pstmt = connection.prepareStatement(sql)) {
+                pstmt.setString(1, user.username());
+                pstmt.setString(2, hashedPassword);
+                pstmt.setString(3, user.email());
+                pstmt.executeUpdate();
+            }
+        }catch (SQLException exception){
+            throw new DataAccessException(exception.getMessage());
+        }
     }
 
     @Override
     public UserData getUser(String username) throws DataAccessException {
-        return null;
+        String sql = "SELECT username, password, email FROM user WHERE username = ?";
+        try(var  connection = DatabaseManager.getConnection()){
+            try(var pstmt = connection.prepareStatement(sql)) {
+                pstmt.setString(1, username);
+                try (var result = pstmt.executeQuery()) {
+                    if (result.next()) {
+                        return new UserData(
+                                result.getString("username"),
+                                result.getString("password"),
+                                result.getString("email")
+                        );
+                    }
+                }
+            }
+        }catch(SQLException exception){
+            throw new DataAccessException("Unable to retrieve user: " + exception.getMessage());
+        }
+        return null; //This will be returned only if we don't find the user.
     }
 
     @Override
     public void createGame(GameData game) throws DataAccessException {
-
     }
 
     @Override

@@ -141,4 +141,73 @@ public class SqlDataAccessTests {
         GameData retrievedGame = myDao.getGame(123456789);
         assertNull(retrievedGame);
     }
+
+    @Test
+    public void listGamesEmptyTest() throws DataAccessException {
+        var games = myDao.listGames();
+        assertNotNull(games);
+        assertEquals(0, games.size());
+    }
+
+    @Test
+    public void listGamesPositiveTest() throws DataAccessException {
+        myDao.createGame(new GameData(0,
+                null, null,
+                "Game A", new ChessGame()));
+        myDao.createGame(new GameData(0,
+                null, null,
+                "Game B", new ChessGame()));
+
+        var games = myDao.listGames();
+
+        assertEquals(2, games.size());
+        assertTrue(games.stream().anyMatch(g -> g.gameName().equals("Game A")));
+        assertTrue(games.stream().anyMatch(g -> g.gameName().equals("Game B")));
+    }
+
+    @Test
+    public void listGamesNegativeTest() throws DataAccessException {
+        var games = myDao.listGames();
+
+        assertNotNull(games);
+        assertEquals(0, games.size(),
+                "if no games exist, listGames should return an empty list.");
+    }
+
+    @Test
+    public void updateGamePositiveTest() throws DataAccessException {
+        myDao.createGame(new GameData(0,
+                null, null,
+                "Original Name", new ChessGame())
+        );
+        int id = myDao.getIdForGame("Original Name");
+
+        GameData updated = new GameData(id, "WhitePlayer",
+                "BlackPlayer",
+                "Updated Name", new ChessGame()
+        );
+
+        myDao.updateGame(updated);
+        GameData retrieved = myDao.getGame(id);
+        //The id shouldn't have changed, or I am in big trouble.
+
+        assertNotNull(retrieved);
+        assertEquals("WhitePlayer", retrieved.whiteUsername());
+        assertEquals("BlackPlayer", retrieved.blackUsername());
+        assertEquals("Updated Name", retrieved.gameName());
+    }
+
+    @Test
+    void updateGameNegativeTest() throws DataAccessException{
+        GameData fakeData = new GameData(1234567890,
+                "White", "Black",
+                "Ghost Game", new ChessGame()
+        );
+
+        assertDoesNotThrow(() -> myDao.updateGame(fakeData));
+
+        //We shouldn't be able to get this fakeData from the dao
+        //It should be impossible for this to ever fail, but just in case...
+        assertNull(myDao.getGame(1234567890));
+    }
 }

@@ -2,6 +2,7 @@ package dataaccess;
 
 
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.sql.SQLException;
 import java.util.List;
@@ -161,12 +162,48 @@ public class SqlDataAccess implements DataAccess {
 
     @Override
     public Collection<GameData> listGames() throws DataAccessException {
-        return List.of();
+        var games = new ArrayList<GameData>();
+        String sql = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM game";
+
+        try(var connection = DatabaseManager.getConnection()){
+            try(var pstmt = connection.prepareStatement(sql)) {
+                try (var result = pstmt.executeQuery()) {
+                    while (result.next()) {
+                        var gameID = result.getInt("gameID");
+                        var whiteUsername = result.getString("whiteUsername");
+                        var blackUsername = result.getString("blackUsername");
+                        var gameName = result.getString("gameName");
+
+                        var gameJson = result.getString("game");
+                        var game = customGson.fromJson(gameJson, ChessGame.class);
+
+                        games.add(new GameData(gameID, whiteUsername, blackUsername, gameName, game));
+                    }
+                }
+            }
+        }catch(SQLException exception){
+            throw new DataAccessException("Error listing games: " + exception.getMessage());
+        }
+        return games;
     }
 
     @Override
     public void updateGame(GameData game) throws DataAccessException {
+        String sql = "UPDATE game SET whiteUsername = ?, blackUsername = ?, gameName = ?, game = ? WHERE gameID = ?";
+        var jsonGame = customGson.toJson(game.game());
 
+        try(var connection = DatabaseManager.getConnection()){
+            try(var pstmt = connection.prepareStatement(sql)) {
+                pstmt.setString(1, game.whiteUsername());
+                pstmt.setString(2, game.blackUsername());
+                pstmt.setString(3, game.gameName());
+                pstmt.setString(4, jsonGame);
+                pstmt.setInt(5, game.gameID());
+                pstmt.executeUpdate();
+            }
+        }catch(SQLException exception){
+            throw new DataAccessException("Error updating game: " + exception.getMessage());
+        }
     }
 
     @Override

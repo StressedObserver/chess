@@ -79,4 +79,66 @@ public class SqlDataAccessTests {
 
         assertNull(result);
     }
+
+    @Test
+    public void createGamePositiveTest() throws DataAccessException {
+        //the gameID we put in should be overwritten.
+        GameData newGame = new GameData(
+                0, null, null,
+                "Grandmaster Showdown", new ChessGame()
+        );
+
+        myDao.createGame(newGame);
+        int testID = myDao.getIdForGame("Grandmaster Showdown");
+
+        assertTrue(testID > 0,
+                "Database should create a generated ID > 0");
+
+        GameData result = myDao.getGame(testID);
+        assertNotNull(result, "Game should be retrievable after creation");
+        assertEquals("Grandmaster Showdown", result.gameName());
+    }
+
+    //Trying to get a game from a gameID that does not exist.
+    @Test
+    public void createGameNegativeTest() throws DataAccessException {
+        int nonExistentID = 1234567890;
+
+        GameData retrievedGame = myDao.getGame(nonExistentID);
+        assertNull(retrievedGame,
+                "Got a game with an ID that should not exist");
+    }
+
+    //now we test for trying to get invalid data
+    @Test
+    public void createGameInvalidDataTest(){
+        GameData badGame = new GameData(0, null, null,
+                null, new ChessGame());
+
+        assertThrows(DataAccessException.class, () -> myDao.createGame(badGame),
+                "Failed to throw DataAccessException if provided fields are missing/ null");
+    }
+
+    @Test
+    public void getGamePositiveTest() throws DataAccessException {
+        //First we need to create a game that we can then retrieve.
+        GameData game = new GameData(0, null, null,
+                "Blitz Battle", new ChessGame()
+        );
+
+        myDao.createGame(game);
+        int testID = myDao.getIdForGame("Blitz Battle");
+        GameData retrieved = myDao.getGame(testID);
+
+        assertNotNull(retrieved, "Game should be retrievable after creation");
+        assertEquals("Blitz Battle", retrieved.gameName());
+        assertEquals(testID, retrieved.gameID());
+        assertNotNull(retrieved.game());
+    }
+
+    @Test
+    public void getGameNegativeTest() throws DataAccessException {
+        GameData retrievedGame = myDao.getGame(123456789);
+        assertNull(retrievedGame);
+    }
 }

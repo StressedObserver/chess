@@ -27,7 +27,7 @@ public class SqlDataAccessTests {
         assertDoesNotThrow(myDao::clear);
         assertNull(myDao.getUser("Balor")); //Need to make sure Balor actually got banished.
 
-        assertNull(myDao); //Can this actually work to make sure everything is gone?
+        //assertNull(myDao); //Can this actually work to make sure everything is gone?
         //I sure hope so, at least.
     }
 }

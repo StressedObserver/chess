@@ -9,6 +9,34 @@ public class DatabaseManager {
     private static String dbPassword;
     private static String connectionUrl;
 
+    private static final String[] CREATE_STATEMENTS = {
+            """
+        CREATE TABLE IF NOT EXISTS user (
+            'username' varchar(256) NOT NULL,
+            'password' varchar(256) NOT NULL,
+            'email' varchar(256) NOT NULL,
+            PRIMARY KEY ('username')
+        )
+        """,
+            """
+        CREATE TABLE IF NOT EXISTS auth (
+            'authToken' varchar(256) NOT NULL,
+            'username' varchar(256) NOT NULL,
+            PRIMARY KEY ('authToken')
+        )
+        """,
+            """
+        CREATE TABLE IF NOT EXISTS game (
+            'gameID' int NOT NULL AUTO_INCREMENT,
+            'whiteUsername' varchar(256),
+            'blackUsername' varchar(256),
+            'gameName' varchar(256) NOT NULL,
+            'game' TEXT NOT NULL,
+            PRIMARY KEY ('gameID')
+        )
+        """
+    };
+
     /*
      * Load the database information for the db.properties file.
      */

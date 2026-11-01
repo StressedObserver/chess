@@ -1,7 +1,9 @@
 package server;
 
 import dataaccess.DataAccess;
+import dataaccess.DatabaseManager;
 import dataaccess.MemoryDataAccess;
+import dataaccess.SqlDataAccess;
 import handler.ClearHandler;
 import handler.GameHandler;
 import handler.UserHandler;
@@ -28,7 +30,10 @@ public class Server {
     public int run(int desiredPort) {
 
         try{
-            final DataAccess dataAccess = new MemoryDataAccess();
+            //new Phase 4 stuff. Hopefully it doesn't conflict with phase 3.
+            DatabaseManager.configureDatabase();
+
+            final DataAccess dataAccess = new SqlDataAccess();
 
             UserService userService = new UserService(dataAccess);
             GameService gameService = new GameService(dataAccess);

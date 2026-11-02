@@ -16,7 +16,8 @@ public class SqlDataAccessTests {
         myDao = new SqlDataAccess();
         myDao.clear();
     }
-
+    //I may or may not have enough unit tests,
+    //but I need to make a new commit to find out for certain.
     @Test //Should only need a positive test for clear()
     public void clearTest() throws DataAccessException {
         //We need stuff in order to later delete it.

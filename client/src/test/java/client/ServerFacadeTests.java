@@ -2,6 +2,11 @@ package client;
 
 import org.junit.jupiter.api.*;
 import server.Server;
+import dataaccess.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import model.AuthData;
+import chess.ChessGame;
+import client.ServerFacade;
 
 
 public class ServerFacadeTests {
@@ -24,6 +29,13 @@ public class ServerFacadeTests {
     @Test
     public void sampleTest() {
         Assertions.assertTrue(true);
+    }
+
+    @Test
+    public void sampleRegisterTest() throws Exception{
+        ServerFacade facade = new ServerFacade(8080);
+        AuthData authData = facade.register("testUser", "password", "user@email.com");
+        assertNotNull(authData.authToken());
     }
 
 }

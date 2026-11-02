@@ -11,6 +11,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.sql.SQLException;
+import java.util.Properties;
+
 public class SqlDataAccessTests {
     private SqlDataAccess myDao;
     @BeforeEach
@@ -274,4 +277,26 @@ public class SqlDataAccessTests {
                 "Should return null for a token that does not exist"
         );
     }
+
+    @Test
+    public void configureDatabasePositiveTest() throws Exception{
+        //Mostly doing this specifically for code coverage.
+        //This should make sure that my configureDatabase() function works under normal circumstances.
+        assertDoesNotThrow(DatabaseManager::configureDatabase);
+    }
+
+    @Test
+    public void configureDatabaseConnectionNegativeTest() throws Exception {
+        //This one should ensure that a dropped connection should throw an error.
+        try (var connection = DatabaseManager.getConnection()) {
+            connection.close(); //Force closing the connection
+
+            assertThrows(SQLException.class, () -> {
+                        connection.prepareStatement("SELECT 1");
+                    },
+                    "An abrupt closed connection should throw a SQLException"
+            );
+        }
+    }
+
 }

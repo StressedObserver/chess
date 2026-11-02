@@ -45,9 +45,9 @@ public class GameService {
         if(request.gameName() == null || request.gameName().isBlank()){
             throw new IllegalArgumentException("Error: bad request");
         }
-        int gameID = Math.abs(UUID.randomUUID().hashCode());
-        GameData gameData = new GameData(gameID, null, null, request.gameName(), new ChessGame());
-        dao.createGame(gameData);
+        //The 0 we are passing in is temporary and will be overwritten.
+        GameData gameData = new GameData(0, null, null, request.gameName(), new ChessGame());
+        int gameID = dao.createGame(gameData);
         return new CreateGameResult(gameID);
     }
 

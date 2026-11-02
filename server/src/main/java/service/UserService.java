@@ -3,11 +3,13 @@ package service;
 import dataaccess.DataAccess;
 import dataaccess.DataAccessException;
 import dataaccess.UnauthorizedException;
+import org.mindrot.jbcrypt.BCrypt;
 import requests.RegisterRequest;
 import requests.*;
 import results.*;
 import model.*;
 
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 public class UserService {
@@ -45,10 +47,20 @@ public class UserService {
             throw new IllegalArgumentException("Error: bad request");
         }
         UserData userData = dao.getUser(request.username());
-        if(userData == null || !(request.password().equals(userData.password()))){
+        if(userData == null){
             throw new UnauthorizedException("Error: unauthorized");
         }
+        try{
+            if(userData.password() != null && !BCrypt.checkpw(request.password(), userData.password())){
+                throw new UnauthorizedException("Error: unauthorized");
+            }
+        }catch(IllegalArgumentException exception){
+            if(!request.password().equals(userData.password())){
+                throw new UnauthorizedException("Error: unauthorized");
+            }
+        }
 
+        //From here on the password should be correct, one way or another.
         String token = UUID.randomUUID().toString();
         AuthData authData = new AuthData(token, request.username());
         dao.createAuth(authData);

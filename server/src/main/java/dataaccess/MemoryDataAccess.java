@@ -30,8 +30,16 @@ public class MemoryDataAccess implements DataAccess{
     }
 
     @Override
-    public void createGame(GameData game) throws DataAccessException {
-        games.put(game.gameID(), game);
+    public int createGame(GameData game) throws DataAccessException {
+        int gameID = Math.abs(UUID.randomUUID().hashCode());
+        GameData gameWithID = new GameData(
+                gameID, game.whiteUsername(),
+                game.blackUsername(),
+                game.gameName(),
+                game.game()
+        );
+        games.put(gameID, gameWithID);
+        return gameID;
     }
 
     @Override

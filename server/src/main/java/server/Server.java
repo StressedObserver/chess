@@ -40,7 +40,7 @@ public class Server {
             ClearService clearService = new ClearService(dataAccess);
 
             UserHandler userHandler = new UserHandler(userService);
-            GameHandler gameHandler = new GameHandler((gameService));
+            GameHandler gameHandler = new GameHandler(gameService);
             ClearHandler clearHandler = new ClearHandler(clearService);
             //Register the endpoints and exception handlers:
             javalin.post("/user",userHandler::register);

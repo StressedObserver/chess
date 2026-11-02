@@ -88,8 +88,7 @@ public class SqlDataAccessTests {
                 "Grandmaster Showdown", new ChessGame()
         );
 
-        myDao.createGame(newGame);
-        int testID = myDao.getIdForGame("Grandmaster Showdown");
+        int testID = myDao.createGame(newGame);
 
         assertTrue(testID > 0,
                 "Database should create a generated ID > 0");
@@ -126,8 +125,7 @@ public class SqlDataAccessTests {
                 "Blitz Battle", new ChessGame()
         );
 
-        myDao.createGame(game);
-        int testID = myDao.getIdForGame("Blitz Battle");
+        int testID = myDao.createGame(game);
         GameData retrieved = myDao.getGame(testID);
 
         assertNotNull(retrieved, "Game should be retrievable after creation");
@@ -176,11 +174,10 @@ public class SqlDataAccessTests {
 
     @Test
     public void updateGamePositiveTest() throws DataAccessException {
-        myDao.createGame(new GameData(0,
+        int id = myDao.createGame(new GameData(0,
                 null, null,
                 "Original Name", new ChessGame())
         );
-        int id = myDao.getIdForGame("Original Name");
 
         GameData updated = new GameData(id, "WhitePlayer",
                 "BlackPlayer",

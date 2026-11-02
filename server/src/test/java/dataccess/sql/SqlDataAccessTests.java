@@ -1,4 +1,4 @@
-package dataaccess.sql;
+package dataccess.sql;
 
 import static org.junit.jupiter.api.Assertions.*;
 import chess.ChessGame;

@@ -208,16 +208,51 @@ public class SqlDataAccess implements DataAccess {
 
     @Override
     public void createAuth(AuthData auth) throws DataAccessException {
+        String sql = "INSERT INTO auth (authToken, username) VALUES (?, ?)";
 
+        try(var connection = DatabaseManager.getConnection()){
+            try(var pstmt = connection.prepareStatement(sql)){
+                pstmt.setString(1, auth.authToken());
+                pstmt.setString(2, auth.username());
+                pstmt.executeUpdate();
+            }
+        }catch(SQLException exception){
+            throw new DataAccessException("Unable to create auth: " + exception.getMessage());
+        }
     }
 
     @Override
     public AuthData getAuth(String token) throws DataAccessException {
-        return null;
+        String sql = "SELECT authToken, username FROM auth WHERE authToken = ?";
+
+        try(var connection = DatabaseManager.getConnection()){
+            try(var pstmt = connection.prepareStatement(sql)){
+                pstmt.setString(1, token);
+                try(var result = pstmt.executeQuery()){
+                    if(result.next()){
+                        return new AuthData(
+                                result.getString("authToken"),
+                                result.getString("username")
+                        );
+                    }
+                }
+            }
+        }catch(SQLException exception){
+            throw new DataAccessException("Error retrieving auth data: " + exception.getMessage());
+        }
+        return null; //We only get here if we don't find the token
     }
 
     @Override
     public void deleteAuth(String token) throws DataAccessException {
-
+        String sql = "DELETE FROM auth WHERE authToken = ?";
+        try(var connection = DatabaseManager.getConnection()){
+            try(var pstmt = connection.prepareStatement(sql)){
+                pstmt.setString(1, token);
+                pstmt.executeUpdate();
+            }
+        }catch(SQLException exception){
+            throw new DataAccessException("Error deleting auth token: " + exception.getMessage());
+        }
     }
 }

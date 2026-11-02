@@ -210,4 +210,66 @@ public class SqlDataAccessTests {
         //It should be impossible for this to ever fail, but just in case...
         assertNull(myDao.getGame(1234567890));
     }
+
+    @Test
+    public void createAuthPositiveTest() throws DataAccessException{
+        AuthData auth = new AuthData("my-secure-token", "StressedObserver");
+        //This shouldn't throw any exceptions, so a failed implementation will throw an exception.
+        assertDoesNotThrow(() -> myDao.createAuth(auth));
+    }
+
+    @Test
+    public void createAuthNegativeTest() throws DataAccessException{
+        //This should test what happens if we try to create duplicate auth tokens.
+        AuthData auth = new AuthData("duplicate-token", "StressedObserver");
+
+        try{
+            myDao.createAuth(auth);
+            //This should be a duplicate now
+            myDao.createAuth(auth); //This should fail and the exception should be caught.
+        }catch(DataAccessException exception){
+            assertNotNull(exception.getMessage()); //We should get a message, causing this to pass.
+        }
+    }
+
+    @Test
+    public void deleteAuthPositiveTest() throws DataAccessException{
+        AuthData authData = new AuthData("logout-token", "Player1");
+        myDao.createAuth(authData);
+        //And now we get to destroy what we just created to test.
+        myDao.deleteAuth("logout-token");
+        assertNull(myDao.getAuth("logout-token"),
+                "Token should be null after deletion"
+        );
+    }
+
+    @Test
+    public void deleteAuthNegativeTest() throws DataAccessException{
+        //In this case, deleting a token that doesn't exist shouldn't be a problem.
+        //As such, we are testing the fact that an error does not get thrown when we attempt
+        //to delete that nonexistant token.
+        assertDoesNotThrow(() -> myDao.deleteAuth("non-existent-token"),
+                "Deleting a token that does not exist should not throw an exception"
+        );
+    }
+
+    @Test
+    public void getAuthPositiveTest() throws DataAccessException{
+        AuthData originalAuth = new AuthData("valid-token", "Player1");
+        myDao.createAuth(originalAuth);
+
+        AuthData retrievedAuth = myDao.getAuth("valid-token");
+        assertEquals(originalAuth, retrievedAuth,
+                "Retrieved auth data should match the original auth data"
+        );
+    }
+
+    @Test
+    public void getAuthNegativeTest() throws DataAccessException {
+        //Here we will be attempting to get a token that had never been created.
+        AuthData retrievedData = myDao.getAuth("fake-token");
+        assertNull(retrievedData,
+                "Should return null for a token that does not exist"
+        );
+    }
 }

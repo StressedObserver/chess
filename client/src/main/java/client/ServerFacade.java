@@ -5,7 +5,7 @@ import model.GameData;
 
 import java.util.Collection;
 import java.util.List;
-
+import java.net.*;
 public class ServerFacade {
     private final String serverUrl;
 
@@ -25,6 +25,15 @@ public class ServerFacade {
 
     public void clear() throws Exception{
         //TODO: Send delete request to the database.
+        URL myUrl = new URI(serverUrl + "/db").toURL();
+        HttpURLConnection connection = (HttpURLConnection) myUrl.openConnection();
+        connection.setRequestMethod("DELETE");
+        connection.connect();
+
+        int responseCode = connection.getResponseCode();
+        if(responseCode / 100 != 2){ //We didn't get a 200 response code back.
+            throw new Exception("Status failed with status code: " + responseCode);
+        }
     }
 
     public AuthData login(String username, String password, String email) throws Exception{

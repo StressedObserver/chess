@@ -1,9 +1,8 @@
 package server;
 
 import dataaccess.DataAccess;
-import dataaccess.DatabaseManager;
+import dataaccess.sql.*;
 import dataaccess.MemoryDataAccess;
-import dataaccess.SqlDataAccess;
 import handler.ClearHandler;
 import handler.GameHandler;
 import handler.UserHandler;

@@ -1,7 +1,8 @@
-package dataaccess;
+package dataaccess.sql;
 
 import java.sql.*;
 import java.util.Properties;
+import dataaccess.*;
 
 public class DatabaseManager {
     private static String databaseName;

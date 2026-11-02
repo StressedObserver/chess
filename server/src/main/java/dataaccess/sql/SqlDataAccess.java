@@ -1,6 +1,6 @@
-package dataaccess;
+package dataaccess.sql;
 
-
+import dataaccess.*;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;

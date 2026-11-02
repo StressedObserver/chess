@@ -1,7 +1,9 @@
-package dataaccess;
+package dataaccess.sql;
 
 import static org.junit.jupiter.api.Assertions.*;
 import chess.ChessGame;
+import dataaccess.DataAccessException;
+import dataaccess.SqlDataAccess;
 import model.AuthData;
 import model.GameData;
 import model.UserData;

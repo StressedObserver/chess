@@ -1,8 +1,13 @@
 package client;
 
+import com.google.gson.Gson;
 import model.AuthData;
 import model.GameData;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
 import java.net.*;
@@ -14,17 +19,45 @@ public class ServerFacade {
     }
 
 
-    public AuthData register(String testUser, String password, String mail) {
-        return new AuthData("not here", "default");
-        /* TODO:
-        * Send POST request to /user with username, password, email
-        * Return parsed AuthData object (contains username and authToken)
-        */
+    public AuthData register(String testUser, String password, String mail) throws Exception {
+        /*
+         * Send POST request to /user with username, password, email
+         * Return parsed AuthData object (contains username and authToken)
+         */
+        URL myUrl = new URI(serverUrl + "/user").toURL();
+        HttpURLConnection connection = (HttpURLConnection) myUrl.openConnection();
+        connection.setRequestMethod("POST");
+        connection.setDoOutput(true); //this shows that we intend to use this connection for output.
+        connection.setRequestProperty("Content-Type", "application/json");
 
+        String requestBody = String.format("{\"username\":\"%s\",\"password\":\"%s\",\"email\":\"%s\"}",
+                testUser, password, mail
+        );
+
+        try(var outputSteam = connection.getOutputStream()){
+            byte[] input = requestBody.getBytes(StandardCharsets.UTF_8);
+            outputSteam.write(input, 0, input.length);
+        }
+
+        int responseCode = connection.getResponseCode();
+
+        if(responseCode / 100 != 2){ //We didn't get a 200 response code
+            throw new Exception("Registration failed with status code: " + responseCode);
+        }
+
+        try(var bufferedReader = new BufferedReader(
+                new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))){
+            StringBuilder response = new StringBuilder();
+            String responseLine;
+            while((responseLine = bufferedReader.readLine()) != null){
+                response.append(responseLine.trim());
+            }
+            return new Gson().fromJson(response.toString(), AuthData.class);
+        }
     }
 
     public void clear() throws Exception{
-        //TODO: Send delete request to the database.
+        //Should send a delete request to the database.
         URL myUrl = new URI(serverUrl + "/db").toURL();
         HttpURLConnection connection = (HttpURLConnection) myUrl.openConnection();
         connection.setRequestMethod("DELETE");

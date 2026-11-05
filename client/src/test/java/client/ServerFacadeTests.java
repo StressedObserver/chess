@@ -23,6 +23,11 @@ public class ServerFacadeTests {
         facade = new ServerFacade(port);
     }
 
+    @BeforeEach
+    void clearDatabase() throws Exception {
+        facade.clear();
+    }
+
     @AfterAll
     static void stopServer() {
         myServer.stop();
@@ -63,11 +68,38 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void clearBadServer() throws Exception{
+    public void clearBadServerTest() throws Exception{
         facade = new ServerFacade(1234567890); //This is an EVIL facade.
         //Shouldn't be valid because ports should only be 4 digits total.
 
         assertThrows(Exception.class, facade::clear);
+    }
+
+    @Test
+    public void registerSuccessTest() throws Exception {
+        AuthData authData = facade.register("Theodora",
+                "password123",
+                "SaramisOfficial@email.com"
+        );
+
+        assertNotNull(authData);
+        assertEquals("Theodora", authData.username());
+        assertNotNull(authData.authToken());
+        assertTrue(authData.authToken().length() > 10);
+    }
+
+    @Test
+    public void registerDuplicateFailTest() throws Exception{
+        assertDoesNotThrow(() -> facade.register("Theodora",
+                "password123",
+                "SaramisOfficial@email.com")
+        );
+
+        assertThrows(Exception.class, () -> {facade.register("Theodora",
+                "differentPassword",
+                "RockThrow@email.com");
+                    }
+        );
     }
 
 }

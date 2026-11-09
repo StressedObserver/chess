@@ -30,7 +30,8 @@ public class ServerFacade {
         connection.setDoOutput(true); //this shows that we intend to use this connection for output.
         connection.setRequestProperty("Content-Type", "application/json");
 
-        String requestBody = String.format("{\"username\":\"%s\",\"password\":\"%s\",\"email\":\"%s\"}",
+        String requestBody = String.format(
+                "{\"username\":\"%s\",\"password\":\"%s\",\"email\":\"%s\"}",
                 testUser, password, mail
         );
 
@@ -69,12 +70,43 @@ public class ServerFacade {
         }
     }
 
-    public AuthData login(String username, String password, String email) throws Exception{
+    public AuthData login(String username, String password) throws Exception{
+        URL myUrl = new URI(serverUrl + "/session").toURL();
+        HttpURLConnection connection = (HttpURLConnection) myUrl.openConnection();
+        connection.setRequestMethod("POST");
+        connection.setDoOutput(true); //this shows that we intend to use this connection for output.
+        connection.setRequestProperty("Content-Type", "application/json");
+
+        String requestBody = String.format(
+                "{\"username\":\"%s\",\"password\":\"%s\"}",
+                username, password
+        );
+
+        try(var outputSteam = connection.getOutputStream()){
+            byte[] input = requestBody.getBytes(StandardCharsets.UTF_8);
+            outputSteam.write(input, 0, input.length);
+        }
+
+        int responseCode = connection.getResponseCode();
+
+        if(responseCode / 100 != 2){ //We didn't get a 200 response code
+            throw new Exception("Registration failed with status code: " + responseCode);
+        }
+
+        try(var bufferedReader = new BufferedReader(
+                new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))){
+            StringBuilder response = new StringBuilder();
+            String responseLine;
+            while((responseLine = bufferedReader.readLine()) != null){
+                response.append(responseLine.trim());
+            }
+            return new Gson().fromJson(response.toString(), AuthData.class);
+        }
         /* TODO:
         //Send POST request to /session with username and password
         //Return parsed AuthData object.
         */
-        return null;
+        //return null;
     }
 
     public void logout(String authToken) throws Exception{

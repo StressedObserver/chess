@@ -102,4 +102,26 @@ public class ServerFacadeTests {
         );
     }
 
+    @Test
+    void loginSuccessTest() throws Exception{
+        facade.register("Dietrich",
+                "ShadowFromElsewhere2",
+                "LamineFamily@yahoo.net");
+
+        AuthData authData = facade.login("Dietrich",
+                "ShadowFromElsewhere2");
+
+        assertNotNull(authData);
+        assertEquals("Dietrich", authData.username());
+        assertNotNull(authData.authToken());
+    }
+
+    @Test
+    void loginFailureWrongPasswordTest() throws Exception{
+        facade.register("Dietrich",
+                "ShadowFromElsewhere2",
+                "LamineFamily@yahoo.net");
+        assertThrows(Exception.class, () -> {facade.login("Dietrich",
+                "ShadowFromElsewhere3"); });
+    }
 }

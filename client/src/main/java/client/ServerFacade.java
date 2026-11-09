@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.net.*;
@@ -112,6 +113,7 @@ public class ServerFacade {
         URL myUrl = new URI(serverUrl + "/session").toURL();
         HttpURLConnection connection = (HttpURLConnection) myUrl.openConnection();
         connection.setRequestMethod("DELETE");
+        connection.setRequestProperty("Content-Type", "application/json");
         connection.setRequestProperty("authorization", authToken);
         connection.connect();
 
@@ -129,7 +131,37 @@ public class ServerFacade {
         //Send POST request to /game with gameName and authToken in headers
         //Return parsed GameData object (contains gameID, gameName, etc.)
         */
-        return null;
+        URL myUrl = new URI(serverUrl + "/game").toURL();
+        HttpURLConnection connection = (HttpURLConnection) myUrl.openConnection();
+        connection.setRequestMethod("POST");
+        connection.setDoOutput(true); //this shows that we intend to use this connection for output.
+        connection.setRequestProperty("Content-Type", "application/json");
+        connection.setRequestProperty("authorization", authToken);
+        String requestBody = String.format(
+                "{\"gameName\":\"%s\"}",
+                gameName
+        );
+
+        try(var outputSteam = connection.getOutputStream()){
+            byte[] input = requestBody.getBytes(StandardCharsets.UTF_8);
+            outputSteam.write(input, 0, input.length);
+        }
+
+        int responseCode = connection.getResponseCode();
+
+        if(responseCode / 100 != 2){ //We didn't get a 200 response code
+            throw new Exception("Registration failed with status code: " + responseCode);
+        }
+
+        try(var bufferedReader = new BufferedReader(
+                new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))){
+            StringBuilder response = new StringBuilder();
+            String responseLine;
+            while((responseLine = bufferedReader.readLine()) != null){
+                response.append(responseLine.trim());
+            }
+            return new Gson().fromJson(response.toString(), GameData.class);
+        }
     }
 
     public Collection<GameData> listGames(String authToken) throws Exception {
@@ -137,10 +169,56 @@ public class ServerFacade {
         //Send GET request to /game with authToken in headers
         //Return parsed array or collection of GameData objects
         */
-        return List.of();
+
+        URL myUrl = new URI(serverUrl + "/game").toURL();
+        HttpURLConnection connection = (HttpURLConnection) myUrl.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setDoOutput(true); //this shows that we intend to use this connection for output.
+        connection.setRequestProperty("Content-Type", "application/json");
+        connection.setRequestProperty("authorization", authToken);
+
+        int responseCode = connection.getResponseCode();
+
+        if(responseCode / 100 != 2){ //We didn't get a 200 response code
+            throw new Exception("Registration failed with status code: " + responseCode);
+        }
+
+        try(var bufferedReader = new BufferedReader(
+                new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))){
+            StringBuilder response = new StringBuilder();
+            String responseLine;
+            while((responseLine = bufferedReader.readLine()) != null){
+                response.append(responseLine.trim());
+            }
+            GameData[] gamesArray = new Gson().fromJson(response.toString(), GameData[].class);
+            return Arrays.asList(gamesArray);
+        }
     }
 
     public void joinGame(String playerColor, int gameID, String authToken) throws Exception{
         // TODO: Send PUT request to /game with playerColor ("WHITE", "BLACK", or null/OBSERVER), gameID, and authToken
+
+
+        URL myUrl = new URI(serverUrl + "/game").toURL();
+        HttpURLConnection connection = (HttpURLConnection) myUrl.openConnection();
+        connection.setRequestMethod("PUT");
+        connection.setRequestProperty("Content-Type", "application/json");
+        connection.setRequestProperty("authorization", authToken);
+        String colorJson = (playerColor != null) ? "\"" + playerColor + "\"" : "null";
+        String requestBody = String.format(
+                "{\"playerColor\":\"%s\",\"gameID\":\"%d\", }",
+                colorJson, gameID
+        );
+
+        try(var outputSteam = connection.getOutputStream()){
+            byte[] input = requestBody.getBytes(StandardCharsets.UTF_8);
+            outputSteam.write(input, 0, input.length);
+        }
+
+        int responseCode = connection.getResponseCode();
+
+        if(responseCode / 100 != 2){ //We didn't get a 200 response code
+            throw new Exception("Registration failed with status code: " + responseCode);
+        }
     }
 }

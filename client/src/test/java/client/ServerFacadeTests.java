@@ -124,4 +124,38 @@ public class ServerFacadeTests {
         assertThrows(Exception.class, () -> {facade.login("Dietrich",
                 "ShadowFromElsewhere3"); });
     }
+
+    @Test
+    void logoutSuccessTest() throws Exception{
+        facade.register("Dietrich",
+                "ShadowFromElsewhere2",
+                "LamineFamily@yahoo.net");
+
+        AuthData authData = facade.login("Dietrich",
+                "ShadowFromElsewhere2");
+        assertNotNull(authData.authToken());
+
+        assertDoesNotThrow(() -> {facade.logout(authData.authToken());});
+    }
+
+    @Test
+    void logoutFailureInvalidTokenTest() throws Exception{
+        //A fake authToken should not be able to log out any users and throw an exception.
+        assertThrows(Exception.class, () -> facade.logout("TheFriendsWeMade"));
+    }
+
+    @Test
+    void registerLoginLogoutSuccessTest() throws Exception{
+        var registerData = facade.register("Leda",
+                "SecretRevengeSeeker",
+                "RoseofCaelus@gmail.com");
+        assertNotNull(registerData.authToken());
+        facade.logout(registerData.authToken());
+
+        AuthData loginData = facade.login("Leda",
+                "SecretRevengeSeeker");
+        assertNotNull(loginData.authToken());
+        assertDoesNotThrow(() -> {facade.logout(loginData.authToken());});
+        assertEquals("Leda", loginData.username());
+    }
 }

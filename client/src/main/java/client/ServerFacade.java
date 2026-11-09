@@ -106,10 +106,21 @@ public class ServerFacade {
         //Send POST request to /session with username and password
         //Return parsed AuthData object.
         */
-        //return null;
     }
 
     public void logout(String authToken) throws Exception{
+        URL myUrl = new URI(serverUrl + "/session").toURL();
+        HttpURLConnection connection = (HttpURLConnection) myUrl.openConnection();
+        connection.setRequestMethod("DELETE");
+        connection.setRequestProperty("authorization", authToken);
+        connection.connect();
+
+        int responseCode = connection.getResponseCode();
+
+        if(responseCode / 100 != 2){ //We didn't get a 200 response code
+            throw new Exception("Registration failed with status code: " + responseCode);
+        }
+
         //TODO: Send DELETE request to /session with authToken in headers
     }
 

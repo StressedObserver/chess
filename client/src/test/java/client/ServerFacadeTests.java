@@ -40,7 +40,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void sampleRegisterTest() throws Exception{
+    public void sampleRegister() throws Exception{
         ServerFacade facade = new ServerFacade(8080);
         AuthData authData = facade.register("testUser", "password", "user@email.com");
         assertNotNull(authData.authToken());
@@ -52,12 +52,12 @@ public class ServerFacadeTests {
     // have.
 
     @Test
-    public void clearNothingSuccessTest() throws Exception {
+    public void clearNothingSuccess() throws Exception {
         assertDoesNotThrow(facade::clear);
     }
 
     @Test
-    public void clearMultipleTimesTest() throws Exception{
+    public void clearMultipleTimes() throws Exception{
         assertDoesNotThrow(() -> {
             facade.clear();
             facade.clear();
@@ -68,7 +68,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void clearBadServerTest() throws Exception{
+    public void clearBadServer() throws Exception{
         facade = new ServerFacade(1234567890); //This is an EVIL facade.
         //Shouldn't be valid because ports should only be 4 digits total.
 
@@ -76,7 +76,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void registerSuccessTest() throws Exception {
+    public void registerSuccess() throws Exception {
         AuthData authData = facade.register("Theodora",
                 "password123",
                 "SaramisOfficial@email.com"
@@ -89,7 +89,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void registerDuplicateFailTest() throws Exception{
+    public void registerDuplicateFail() throws Exception{
         assertDoesNotThrow(() -> facade.register("Theodora",
                 "password123",
                 "SaramisOfficial@email.com")
@@ -103,7 +103,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    void loginSuccessTest() throws Exception{
+    void loginSuccess() throws Exception{
         facade.register("Dietrich",
                 "ShadowFromElsewhere2",
                 "LamineFamily@yahoo.net");
@@ -117,7 +117,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    void loginFailureWrongPasswordTest() throws Exception{
+    void loginFailureWrongPassword() throws Exception{
         facade.register("Dietrich",
                 "ShadowFromElsewhere2",
                 "LamineFamily@yahoo.net");
@@ -126,7 +126,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    void logoutSuccessTest() throws Exception{
+    void logoutSuccess() throws Exception{
         facade.register("Dietrich",
                 "ShadowFromElsewhere2",
                 "LamineFamily@yahoo.net");
@@ -139,13 +139,13 @@ public class ServerFacadeTests {
     }
 
     @Test
-    void logoutFailureInvalidTokenTest() throws Exception{
+    void logoutFailureInvalidToken() throws Exception{
         //A fake authToken should not be able to log out any users and throw an exception.
         assertThrows(Exception.class, () -> facade.logout("TheFriendsWeMade"));
     }
 
     @Test
-    void registerLoginLogoutSuccessTest() throws Exception{
+    void registerLoginLogoutSuccess() throws Exception{
         var registerData = facade.register("Leda",
                 "SecretRevengeSeeker",
                 "RoseofCaelus@gmail.com");
@@ -157,5 +157,47 @@ public class ServerFacadeTests {
         assertNotNull(loginData.authToken());
         assertDoesNotThrow(() -> {facade.logout(loginData.authToken());});
         assertEquals("Leda", loginData.username());
+    }
+
+    @Test
+    void createGameSuccess() throws Exception{
+        var authData = facade.register("Leda",
+                "SecretRevengeSeeker",
+                "RoseofCaelus@gmail.com");
+        var gameData = facade.createGame("Beginner's Match", authData.authToken());
+        assertNotNull(gameData);
+        assertTrue(gameData.gameID() > 0);
+    }
+
+    @Test
+    void listGamesSuccess() throws Exception{
+        var authData = facade.register("Theodora",
+                "password123",
+                "SaramisOfficial@email.com");
+        facade.createGame("A", authData.authToken());
+        facade.createGame("B", authData.authToken());
+
+        var games = facade.listGames(authData.authToken());
+        assertNotNull(games);
+        assertEquals(2, games.size());
+    }
+
+    @Test
+    void joinGameSuccess() throws Exception{
+        var authData = facade.register("Theodora",
+                "password123",
+                "SaramisOfficial@email.com");
+        var gameData = facade.createGame("Queen's Gambit",authData.authToken());
+        assertDoesNotThrow(() -> { facade.joinGame(
+                "WHITE", gameData.gameID(), authData.authToken());
+        });
+
+        var authData2 = facade.register(
+                "Bertrand", "TrialOfChariot7", "WhiteManedDemon@sbcglobal.net"
+        );
+        assertDoesNotThrow(() -> { facade.joinGame(
+                "BLACK", gameData.gameID(), authData2.authToken());
+        });
+
     }
 }

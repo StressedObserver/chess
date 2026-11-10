@@ -8,10 +8,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.net.*;
+import results.ListGamesResult;
 public class ServerFacade {
     private final String serverUrl;
 
@@ -67,7 +66,7 @@ public class ServerFacade {
 
         int responseCode = connection.getResponseCode();
         if(responseCode / 100 != 2){ //We didn't get a 200 response code back.
-            throw new Exception("Status failed with status code: " + responseCode);
+            throw new Exception("Clear failed with status code: " + responseCode);
         }
     }
 
@@ -91,7 +90,7 @@ public class ServerFacade {
         int responseCode = connection.getResponseCode();
 
         if(responseCode / 100 != 2){ //We didn't get a 200 response code
-            throw new Exception("Registration failed with status code: " + responseCode);
+            throw new Exception("Login failed with status code: " + responseCode);
         }
 
         try(var bufferedReader = new BufferedReader(
@@ -120,7 +119,7 @@ public class ServerFacade {
         int responseCode = connection.getResponseCode();
 
         if(responseCode / 100 != 2){ //We didn't get a 200 response code
-            throw new Exception("Registration failed with status code: " + responseCode);
+            throw new Exception("Logout failed with status code: " + responseCode);
         }
 
         //TODO: Send DELETE request to /session with authToken in headers
@@ -150,7 +149,7 @@ public class ServerFacade {
         int responseCode = connection.getResponseCode();
 
         if(responseCode / 100 != 2){ //We didn't get a 200 response code
-            throw new Exception("Registration failed with status code: " + responseCode);
+            throw new Exception("Create Game failed with status code: " + responseCode);
         }
 
         try(var bufferedReader = new BufferedReader(
@@ -180,7 +179,7 @@ public class ServerFacade {
         int responseCode = connection.getResponseCode();
 
         if(responseCode / 100 != 2){ //We didn't get a 200 response code
-            throw new Exception("Registration failed with status code: " + responseCode);
+            throw new Exception("listGames failed with status code: " + responseCode);
         }
 
         try(var bufferedReader = new BufferedReader(
@@ -190,8 +189,8 @@ public class ServerFacade {
             while((responseLine = bufferedReader.readLine()) != null){
                 response.append(responseLine.trim());
             }
-            GameData[] gamesArray = new Gson().fromJson(response.toString(), GameData[].class);
-            return Arrays.asList(gamesArray);
+            ListGamesResult result = new Gson().fromJson(response.toString(), ListGamesResult.class);
+            return result.games();
         }
     }
 
@@ -202,11 +201,13 @@ public class ServerFacade {
         URL myUrl = new URI(serverUrl + "/game").toURL();
         HttpURLConnection connection = (HttpURLConnection) myUrl.openConnection();
         connection.setRequestMethod("PUT");
+        connection.setDoOutput(true);
         connection.setRequestProperty("Content-Type", "application/json");
         connection.setRequestProperty("authorization", authToken);
-        String colorJson = (playerColor != null) ? "\"" + playerColor + "\"" : "null";
+        String colorJson = "\"" + playerColor + "\"";
+
         String requestBody = String.format(
-                "{\"playerColor\":\"%s\",\"gameID\":\"%d\", }",
+                "{\"playerColor\":%s,\"gameID\":%d}",
                 colorJson, gameID
         );
 
@@ -218,7 +219,7 @@ public class ServerFacade {
         int responseCode = connection.getResponseCode();
 
         if(responseCode / 100 != 2){ //We didn't get a 200 response code
-            throw new Exception("Registration failed with status code: " + responseCode);
+            throw new Exception("Join game failed with status code: " + responseCode);
         }
     }
 }

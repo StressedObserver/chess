@@ -33,7 +33,7 @@ public class Repl {
             printPrompt(); //Created an implementation for this. Create unit tests for it later.
             line = scanner.nextLine();
             try{
-                processCommand(line); //TODO: Also implement this
+                processCommand(line); //I have implemented this function, but not all of the functions it calls.
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
             }
@@ -52,5 +52,58 @@ public class Repl {
 
     private void processCommand(String line) throws Exception{
         //Will have to implement this tomorrow.
+        String[] tokens = line.split("\\s+");
+        String cmd = tokens[0].toLowerCase();
+        if(!isLoggedIn){
+            switch(cmd){
+                case "help": displayPreLoginHelp(); //TODO: Implement this
+                case "register": handleRegister(tokens); //TODO: Implement this
+                case "login": handleLogin(tokens); //TODO: Implement this
+                default: System.out.println("Unknown command. Type 'help'.");
+                //Not handling "quit" because the loop should have already handled it.
+            }
+        } else{
+            switch(cmd) {
+                case "help": displayPostLoginHelp(); //TODO: Implement this
+                case "logout": handleLogout(); //TODO: Implement this
+                case "create": handleCreateGame(tokens); //TODO: Implement this
+                case "list": handleListGames(); //TODO: Implement this
+                case "join": handleJoinGame(tokens); //TODO: Implement this
+                default: System.out.println("Unknown command. Type 'help'.");
+            }
+        }
     }
+
+    private void displayPreLoginHelp() throws Exception{
+        //Implement this
+    }
+
+    private void handleRegister(String[] tokens) throws Exception{
+        //Implement this
+    }
+
+    private void handleLogin(String[] tokens) throws Exception{
+        //Implement this
+    }
+
+    private void displayPostLoginHelp() throws Exception{
+        //Implement this
+    }
+
+    private void handleLogout() throws Exception{
+        //Implement this
+    }
+
+    private void handleCreateGame(String[] tokens) throws Exception{
+        //Implement this
+    }
+
+    private void handleListGames() throws Exception{
+        //Implement this
+    }
+
+    private void handleJoinGame(String[] tokens) throws Exception{
+        //Implement this
+    }
+
 }

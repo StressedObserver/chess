@@ -200,4 +200,50 @@ public class ServerFacadeTests {
         });
 
     }
+
+    @Test
+    void createGameInvalidToken() throws Exception{
+        assertThrows(Exception.class, () ->
+                facade.createGame("Void Game", "fakeAuthToken")
+        );
+    }
+
+    @Test
+    void listGamesInvalidToken() throws Exception{
+        assertThrows(Exception.class,() ->
+                facade.listGames("fakeAuthToken")
+        );
+    }
+
+    @Test
+    void joinGameInvalidToken() throws Exception{
+        var authData = facade.register(
+                "Bertrand", "TrialOfChariot7", "WhiteManedDemon@sbcglobal.net"
+        );
+        var gameData = facade.createGame("Test Game", authData.authToken());
+        assertThrows(Exception.class, () ->
+                facade.joinGame("WHITE", gameData.gameID(), "fakeAuthToken")
+        );
+    }
+
+    @Test
+    void joinGameInvalidID() throws Exception{
+        var authData = facade.register("Theodora",
+                "password123",
+                "SaramisOfficial@email.com");
+        //999999 should be a gameID that couldn't possibly exist, and thus an exception should be thrown
+        assertThrows(Exception.class, () -> facade.joinGame("WHITE", 999999, authData.authToken()));
+    }
+
+    @Test
+    void joinGameBadColor() throws Exception{
+        var authData = facade.register("Dietrich",
+                "ShadowFromElsewhere2",
+                "LamineFamily@yahoo.net");
+        var gameData = facade.createGame("Test Game", authData.authToken());
+        //Trying to join the game with a bad color
+        assertThrows(Exception.class, () ->
+                facade.joinGame("BLUE", gameData.gameID(), authData.authToken())
+        );
+    }
 }

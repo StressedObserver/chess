@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Collection;
 import java.net.*;
 import results.ListGamesResult;
@@ -119,10 +120,22 @@ public class Repl {
 
     private void handleLogout() throws Exception{
         //Implement this
+        facade.logout(authToken);
+        System.out.println("Logged out successfully (" + currentUser + ").");
+        //Resetting global variables back to their default state.
+        authToken = null;
+        currentUser = null;
+        isLoggedIn = false;
     }
 
     private void handleCreateGame(String[] tokens) throws Exception{
         //Implement this
+        if(tokens.length < 2){
+            System.out.println("Usage create <gameName>");
+        }
+        String gameName = String.join(" ", Arrays.copyOfRange(tokens, 1, tokens.length));
+        GameData gameData = facade.createGame(gameName, authToken);
+        System.out.println("Game created successfully with ID: " + gameData.gameID());
     }
 
     private void handleListGames() throws Exception{

@@ -56,15 +56,15 @@ public class Repl {
         String cmd = tokens[0].toLowerCase();
         if(!isLoggedIn){
             switch(cmd){
-                case "help": displayPreLoginHelp(); //TODO: Implement this
-                case "register": handleRegister(tokens); //TODO: Implement this
-                case "login": handleLogin(tokens); //TODO: Implement this
+                case "help": displayPreLoginHelp();
+                case "register": handleRegister(tokens);
+                case "login": handleLogin(tokens);
                 default: System.out.println("Unknown command. Type 'help'.");
                 //Not handling "quit" because the loop should have already handled it.
             }
         } else{
             switch(cmd) {
-                case "help": displayPostLoginHelp(); //TODO: Implement this
+                case "help": displayPostLoginHelp();
                 case "logout": handleLogout(); //TODO: Implement this
                 case "create": handleCreateGame(tokens); //TODO: Implement this
                 case "list": handleListGames(); //TODO: Implement this
@@ -76,18 +76,45 @@ public class Repl {
 
     private void displayPreLoginHelp() throws Exception{
         //Implement this
+        System.out.println("Available commands:");
+        System.out.println(" register <username> <password> <email> - Create an account");
+        System.out.println(" login <username> <password> - Log into your account");
+        System.out.println(" quit - Exit the program");
     }
 
     private void handleRegister(String[] tokens) throws Exception{
         //Implement this
+        if(tokens.length < 4){
+            System.out.println("Usage: register <username> <password> <email>");
+            return;
+        }
+        AuthData authData = facade.register(tokens[1], tokens[2], tokens[3]);
+        authToken = authData.authToken();
+        currentUser = authData.username();
+        isLoggedIn = true;
+        System.out.println("Successfully registered and logged in as " + currentUser);
     }
 
     private void handleLogin(String[] tokens) throws Exception{
         //Implement this
+        if(tokens.length < 3){
+            System.out.println("Usage: register <username> <password>");
+            return;
+        }
+        AuthData authData = facade.login(tokens[1], tokens[2]);
+        authToken = authData.authToken();
+        currentUser = authData.username();
+        isLoggedIn = true;
+        System.out.println("Successfully logged in as " + currentUser);
     }
 
     private void displayPostLoginHelp() throws Exception{
         //Implement this
+        System.out.println("Available commands:");
+        System.out.println(" create <gameName> - Create a new chess game");
+        System.out.println(" list - List all of the active games");
+        System.out.println(" join <gameID> <WHITE|BLACK> - Join a game");
+        System.out.println(" logout - Log out of your account");
     }
 
     private void handleLogout() throws Exception{

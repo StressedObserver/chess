@@ -71,4 +71,23 @@ public class ReplTest {
             method.invoke(repl, (Object) moreTokens);
         });
     }
+
+    @Test
+    void fullClientLifecyclePositive() throws Exception{
+        assertDoesNotThrow(() -> {
+            var method = Repl.class.getDeclaredMethod("processCommand", String.class);
+            method.setAccessible(true);
+            String uniqueUser = "User_" + System.currentTimeMillis();
+            method.invoke(repl, "register " +
+                    uniqueUser +
+                    " password123 test@email.com");
+            method.invoke(repl, "create NewMatch");
+            method.invoke(repl, "list");
+            method.invoke(repl, "join 1 WHITE");
+            //may need to debug this to ensure right ID is found and sent.
+            method.invoke(repl, "logout");
+        });
+    }
+
+
 }

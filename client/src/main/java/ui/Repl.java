@@ -139,6 +139,7 @@ public class Repl {
         //Implement this
         if(tokens.length < 2){
             System.out.println("Usage create <gameName>");
+            return;
         }
         String gameName = String.join(" ", Arrays.copyOfRange(tokens, 1, tokens.length));
         GameData gameData = facade.createGame(gameName, authToken);
@@ -155,11 +156,11 @@ public class Repl {
         System.out.println("--- Active Games ---");
         int index = 1;
         for(var game : games){
-            index++;
             System.out.printf("%d. Name: '%s' | ID: %s | White: %s | Black: %s%n",
                     index, game.gameName(), game.gameID(),
                     game.whiteUsername(), game.blackUsername()
             );
+            index++;
         }
     }
 

@@ -22,7 +22,7 @@ public class Repl {
 
     public Repl(int port) throws Exception {
         facade = new ServerFacade(port);
-        facade.clear();
+        //facade.clear();
     }
 
     public void run() throws Exception{

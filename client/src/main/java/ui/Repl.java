@@ -66,10 +66,10 @@ public class Repl {
         } else{
             switch(cmd) {
                 case "help": displayPostLoginHelp();
-                case "logout": handleLogout(); //TODO: Implement this
-                case "create": handleCreateGame(tokens); //TODO: Implement this
-                case "list": handleListGames(); //TODO: Implement this
-                case "join": handleJoinGame(tokens); //TODO: Implement this
+                case "logout": handleLogout();
+                case "create": handleCreateGame(tokens);
+                case "list": handleListGames();
+                case "join": handleJoinGame(tokens);
                 default: System.out.println("Unknown command. Type 'help'.");
             }
         }
@@ -140,10 +140,32 @@ public class Repl {
 
     private void handleListGames() throws Exception{
         //Implement this
+        var games = facade.listGames(authToken);
+        if(games.isEmpty()){
+            System.out.println("No active games found.");
+            return;
+        }
+        System.out.println("--- Active Games ---");
+        int index = 1;
+        for(var game : games){
+            index++;
+            System.out.printf("%d. Name: '%s' | ID: %s | White: %s | Black: %s%n",
+                    index, game.gameName(), game.gameID(),
+                    game.whiteUsername(), game.blackUsername()
+            );
+        }
     }
 
     private void handleJoinGame(String[] tokens) throws Exception{
         //Implement this
+        if(tokens.length < 3){
+            System.out.println("Usage: join <ID> <WHITE|BLACK>");
+            return;
+        }
+        int gameID = Integer.parseInt(tokens[1]);
+        String color = tokens[2].toUpperCase();
+        facade.joinGame(color, gameID, authToken);
+        System.out.println("Successfully joined game " + gameID + " as " + color);
     }
 
 }

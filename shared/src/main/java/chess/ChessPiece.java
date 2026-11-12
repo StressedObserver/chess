@@ -104,4 +104,8 @@ public class ChessPiece {
                 ", pieceType=" + pieceType +
                 '}';
     }
+
+    public String printChessPiece(){
+        return this.getTeamColor() + "_" + this.getPieceType();
+    }
 }

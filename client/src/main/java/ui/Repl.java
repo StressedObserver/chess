@@ -20,8 +20,9 @@ public class Repl {
     private String currentUser = null;
     private boolean isLoggedIn = false;
 
-    public Repl(int port){
+    public Repl(int port) throws Exception {
         facade = new ServerFacade(port);
+        facade.clear();
     }
 
     public void run() throws Exception{
@@ -44,7 +45,7 @@ public class Repl {
     }
 
     private void printPrompt(){
-        if(!isLoggedIn){
+        if(isLoggedIn){
             System.out.println("\n[" + currentUser + "] >>> ");
         } else{
             System.out.println("\n[Logged Out] >>> ");
@@ -52,25 +53,31 @@ public class Repl {
     }
 
     private void processCommand(String line) throws Exception{
+        if(line == null || line.isBlank()){
+            return;
+        }
         //Will have to implement this tomorrow.
         String[] tokens = line.split("\\s+");
         String cmd = tokens[0].toLowerCase();
+        if(cmd.equalsIgnoreCase("quit")){
+            return;
+        }
         if(!isLoggedIn){
             switch(cmd){
-                case "help": displayPreLoginHelp();
-                case "register": handleRegister(tokens);
-                case "login": handleLogin(tokens);
-                default: System.out.println("Unknown command. Type 'help'.");
-                //Not handling "quit" because the loop should have already handled it.
+                case "help" -> displayPreLoginHelp();
+                case "register"-> handleRegister(tokens);
+                case "login"-> handleLogin(tokens);
+                default -> System.out.println("Unknown command. Type 'help'.");
+                //Not handling "quit" because thing above should handle it.
             }
         } else{
             switch(cmd) {
-                case "help": displayPostLoginHelp();
-                case "logout": handleLogout();
-                case "create": handleCreateGame(tokens);
-                case "list": handleListGames();
-                case "join": handleJoinGame(tokens);
-                default: System.out.println("Unknown command. Type 'help'.");
+                case "help" -> displayPostLoginHelp();
+                case "logout" -> handleLogout();
+                case "create" -> handleCreateGame(tokens);
+                case "list" -> handleListGames();
+                case "join" -> handleJoinGame(tokens);
+                default -> System.out.println("Unknown command. Type 'help'.");
             }
         }
     }
